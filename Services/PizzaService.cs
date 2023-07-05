@@ -15,28 +15,14 @@ public class PizzaService
     
     public PizzaService(CosmosConnection connection)
     {
-      //  _cosmosConnection = connection;
         var client = new CosmosClient(connection.EndpointUri, connection.PrimaryKey);
         var db = client.GetDatabase(connection.DatabaseName);
         _container = db.GetContainer(connection.ContainerName);
     }
 
-    static List<Pizza> Pizzas { get; }
-    static int nextId = 3;
-    static PizzaService()
-    {
-        Pizzas = new List<Pizza>
-        {
-            new Pizza { Id = "1", Name = "Classic Italian", IsGlutenFree = false },
-            new Pizza { Id = "2", Name = "Veggie", IsGlutenFree = true }
-        };
-    }
-
     public async Task<List<Pizza>> GetAll() {
         var pizzas = _container.GetItemLinqQueryable<Pizza>(true)
         .Select(x => x).ToList<Pizza>();
-        
-        //var pizIt = pizzas.ToList<Pizza>();
         
         return pizzas;
     }
@@ -53,10 +39,7 @@ public class PizzaService
 
     public async Task<Pizza> Add(Pizza pizza)
     {
-        // Guid gu = new Guid();
-        // pizza.Id = gu;// nextId++.ToString();
         return await _container.CreateItemAsync<Pizza>(pizza);       
-        //Pizzas.Add(pizza);
     }
 
     public async Task<Pizza> Delete(string id)

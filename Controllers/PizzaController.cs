@@ -37,21 +37,12 @@ public class PizzaController : ControllerBase
     public async Task<IActionResult> CreatePizza(Pizza pizza) {
         
         return Ok(await _pService.Add(pizza));
-        //return CreatedAtAction(nameof(Get), new { id = pizza.Id}, pizza);
     }
 
    [HttpPut("{id}")]
     public async Task<IActionResult> Update(string id, Pizza pizza)
     {
-        // if (id != pizza.Id)
-        //      return BadRequest();
-           
-        // var existingPizza = _pService.Get(id);
-        // if(existingPizza == null)
-        //     return NotFound();
-   
         await _pService.Update(id,pizza);           
-   
         return CreatedAtAction(nameof(Get),new {id = pizza.Id}, pizza);
     }
 
