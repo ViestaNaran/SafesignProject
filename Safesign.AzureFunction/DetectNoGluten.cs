@@ -11,7 +11,6 @@ namespace Safesign.AzureFunction
         private readonly ILogger _logger;
         private readonly HttpClient _httpClient;
         
-        
         public DetectNoGluten(ILoggerFactory loggerFactory, IHttpClientFactory httpClientFactory)
         {
             _logger = loggerFactory.CreateLogger<DetectNoGluten>();
