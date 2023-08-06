@@ -16,7 +16,7 @@ public class PizzaService
     public PizzaService(CosmosConnection connection)
     {
         var client = new CosmosClient(connection.EndpointUri, connection.PrimaryKey);
-        var db = client.GetDatabase(connection.DatabaseName);
+        var db = client.GetDatabase(connection.PizzaDB);
         _container = db.GetContainer(connection.ContainerName);
     }
 
