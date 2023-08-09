@@ -5,5 +5,6 @@ namespace Safesign.Data {
         public string? PizzaDB {get; set;}
         public string? SafesignDB { get; set; }
         public string? ContainerName {get; set;}
+        public string? PlanContainer { get; set;}
     }
 }

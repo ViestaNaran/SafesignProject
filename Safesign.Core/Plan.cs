@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Safesign.Core
 {
-    internal class Plan
+    public class Plan
     {
         [JsonProperty("id")]
         public int Id { get; set; }
-        public List<Sign> Signs { get; set; }
-        public MainReSponsible? MResponsible { get; set; }
-    
+        public List<Sign>? Signs { get; set; }
+       // public MainReSponsible? MResponsible { get; set; }
+        public string? Responsible { get; set; }
     }
 }

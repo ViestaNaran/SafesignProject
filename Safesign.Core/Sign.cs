@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Safesign.Core
 {
-    internal class Sign
+    public class Sign
     {
         [JsonProperty("id")]
         public int Id { get;set; }
