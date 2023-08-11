@@ -10,12 +10,17 @@ namespace Safesign.Core
     public class Sign
     {
         [JsonProperty("id")]
-        public int Id { get;set; }
-        public int ProjectId { get; set; } 
-        public float Angle { get; set; }
+        public string Id { get;set; }
+        public string ProjectId { get; set; } 
+        // public float Angle { get; set; }
 
         // change these into GeoCoordinator class later?
-        public double Lat { get; set; }
-        public double Long { get; set; }
+        //  public double Lat { get; set; }
+        // public double Long { get; set; }
+    
+        public Sign(string id, string projectId) {
+            Id = id;
+            ProjectId = projectId;
+        }
     }
 }

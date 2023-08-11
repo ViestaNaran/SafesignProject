@@ -5,7 +5,7 @@ namespace Safesign.Core
     public class MainReSponsible
     {
         [JsonProperty("id")]
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string? Role { get; set; }
 
         public string? FirstName { get; set; }

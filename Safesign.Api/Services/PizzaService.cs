@@ -1,8 +1,6 @@
-using Safesign.Core;
 using Microsoft.Azure.Cosmos;
-using Microsoft.Azure.Cosmos.Linq;
+using Safesign.Core;
 using Safesign.Data;
-//using System.Linq;
 
 
 namespace Safesign.Services;

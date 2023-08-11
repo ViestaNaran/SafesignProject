@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +11,17 @@ namespace Safesign.Core
     public class Plan
     {
         [JsonProperty("id")]
-        public int Id { get; set; }
-        public List<Sign>? Signs { get; set; }
-       // public MainReSponsible? MResponsible { get; set; }
+        public string Id { get; set; }
+        public List<Sign> Signs {get; set;}
+       //public MainReSponsible? MResponsible { get; set; }
         public string? Responsible { get; set; }
+
+        public Plan() {}
+
+        public Plan(string id, string responsible) {
+            Id = id;
+            Signs = new List<Sign>();
+            Responsible = responsible;
+        }
     }
 }

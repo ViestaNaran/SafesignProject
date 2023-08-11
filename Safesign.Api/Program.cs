@@ -12,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 var connection = builder.Configuration.GetSection("Cosmos").Get<CosmosConnection>();
 builder.Services.AddSingleton(connection);
 builder.Services.AddSingleton<PizzaService>();
+builder.Services.AddSingleton<PlanService>();
+builder.Services.AddSingleton<SignService>();
 
 // Add services to the container.
 
