@@ -20,7 +20,6 @@ namespace Safesign.Core
 
         public Plan(string id, string responsible) {
             Id = id;
-            Signs = new List<Sign>();
             Responsible = responsible;
         }
     }

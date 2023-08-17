@@ -1,7 +1,6 @@
 using Microsoft.Azure.Cosmos;
 using Safesign.Core;
 using Safesign.Data;
-using Safesign.Services;
 
 namespace Safesign.Services
 {
@@ -34,18 +33,27 @@ namespace Safesign.Services
            return sign;
        }
 
+        public async Task<List<Sign>> GetSignsByPlanId(string planId) 
+        {
+            var signs = _signContainer.GetItemLinqQueryable<Sign>(true)
+            .Where(p => p.ProjectId == planId)
+            .AsEnumerable()
+            .ToList();
+
+            return signs;
+        }
+
        public async Task<Sign> Add(Sign sign)
        {
            return await _signContainer.CreateItemAsync<Sign>(sign);
        }
 
         // In progress
-       public async Task<Sign> Add(string id, string planId)
+       public async Task<Sign> Add(string id, string planId, float angle)
        {
-            Sign sign = new Sign(id,planId);
+            Sign sign = new Sign(id, planId, angle);
             return await _signContainer.CreateItemAsync<Sign>(sign);
        }
-
 
        public async Task<Sign> Delete(string id)
        {

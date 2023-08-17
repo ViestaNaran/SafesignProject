@@ -34,11 +34,11 @@ public class SignController : ControllerBase
         return Ok(await _signService.Get(id));
     }
     // POST action
-    [HttpPost]
-    public async Task<IActionResult> CreateSign(Sign sign)
-    {
-        return Ok(await _signService.Add(sign));
-    }
+    // [HttpPost]
+    // public async Task<IActionResult> CreateSign(Sign sign)
+    // {
+    //     return Ok(await _signService.Add(sign));
+    // }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(string id, Sign sign)

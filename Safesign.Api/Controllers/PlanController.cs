@@ -31,11 +31,29 @@ public class PlanController : ControllerBase
         }
         return Ok(await _planService.Get(id));
     }
-    // POST action
-    [HttpPost]
-    public async Task<IActionResult> CreatePlan(Plan plan)
+
+    [HttpGet("{Id}/signs")]
+    public async Task<IActionResult> GetPlanSigns(string Id)
     {
-        return CreatedAtAction(nameof(Get), new {id = plan.Id}, await _planService.Add(plan));
+        var signs = await _planService.GetPlanSigns(Id);
+        if(signs == null || signs.Count == 0) 
+        {
+            return NotFound();
+        }
+
+        return Ok(signs);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreatePlan([FromBody] PlanRequestModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            Plan plan = new Plan(model.Id, model.Responsible);
+            var createdPlan = await _planService.Add(plan);
+            return CreatedAtAction(nameof(Get), new { id = createdPlan.Id }, createdPlan);
+        }
+        return BadRequest(ModelState);
     }
 
     [HttpPut("{id}")]
@@ -51,7 +69,6 @@ public class PlanController : ControllerBase
         await _planService.AddSignToPlan(id);
         return CreatedAtAction(nameof(Get), new {id = plan.Id}, plan);
     }
-
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)
