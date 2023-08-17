@@ -44,16 +44,16 @@ namespace Safesign.Services
         }
 
        public async Task<Sign> Add(Sign sign)
-       {
+        {
            return await _signContainer.CreateItemAsync<Sign>(sign);
-       }
+        }
 
         // In progress
        public async Task<Sign> Add(string id, string planId, float angle)
-       {
+        {
             Sign sign = new Sign(id, planId, angle);
             return await _signContainer.CreateItemAsync<Sign>(sign);
-       }
+        }
 
        public async Task<Sign> Delete(string id)
        {

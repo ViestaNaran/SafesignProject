@@ -33,6 +33,7 @@ public class SignController : ControllerBase
         }
         return Ok(await _signService.Get(id));
     }
+    
     // POST action
     // [HttpPost]
     // public async Task<IActionResult> CreateSign(Sign sign)

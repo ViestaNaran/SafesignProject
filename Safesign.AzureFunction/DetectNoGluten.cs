@@ -31,7 +31,7 @@ namespace Safesign.AzureFunction
                 foreach(var i in input)
                 {
                     _logger.LogInformation("Documents modified: " + i.Id);
-                    _logger.LogInformation("First document Id: " + i.IsGlutenFree);
+                    _logger.LogInformation("IsGlutenFree: " + i.IsGlutenFree);
 
                     if(!i.IsGlutenFree)
                     {
