@@ -14,6 +14,7 @@ builder.Services.AddSingleton(connection);
 builder.Services.AddSingleton<PizzaService>();
 builder.Services.AddSingleton<PlanService>();
 builder.Services.AddSingleton<SignService>();
+builder.Services.AddSingleton<ConstructionSiteService>();
 
 // Add services to the container.
 

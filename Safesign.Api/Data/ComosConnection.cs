@@ -7,5 +7,6 @@ namespace Safesign.Data {
         public string? ContainerName {get; set;}
         public string? PlanContainer { get; set;}
         public string? SignContainer {get; set;}
+        public string? ConstructionSiteContainer { get; set; }
     }
 }
