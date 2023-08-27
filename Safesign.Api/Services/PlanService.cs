@@ -26,6 +26,9 @@ namespace Safesign.Services
            .Select(x => x).ToList<Plan>();
 
            return plans;
+
+
+
        }
 
        public async Task<Plan> Get(string id)
