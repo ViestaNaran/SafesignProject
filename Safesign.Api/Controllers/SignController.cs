@@ -25,15 +25,27 @@ public class SignController : ControllerBase
     [HttpGet("{Id}")]
     public async Task<IActionResult> Get(string id)
     {
-        var plan = _signService.Get(id);
+        var sign = await _signService.Get(id);
 
-        if (plan == null)
+        if (sign == null)
         {
-            return NotFound();
+            return NotFound(new {message = "Sign not found"});
         }
-        return Ok(await _signService.Get(id));
+        return Ok(sign);
     }
     
+    [HttpGet("cs/{Id}")]
+    public async Task<IActionResult> GetByCSId(string id)
+    {
+        var signs = await _signService.GetSignsByCSId(id);
+
+        if (signs == null)
+        {
+            return NotFound(new {message = "Sign not found"});
+        }
+        return Ok(signs);
+    }
+
     // POST action
     // [HttpPost]
     // public async Task<IActionResult> CreateSign(Sign sign)

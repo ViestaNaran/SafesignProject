@@ -33,10 +33,20 @@ namespace Safesign.Services
            return sign;
        }
 
-        public async Task<List<Sign>> GetSignsByPlanId(string planId) 
+        public async Task<List<Sign>> GetSignsByPlanId(string planId)
         {
             var signs = _signContainer.GetItemLinqQueryable<Sign>(true)
             .Where(p => p.ProjectId == planId)
+            .AsEnumerable()
+            .ToList();
+
+            return signs;
+        }
+    
+        public async Task<List<Sign>> GetSignsByCSId(string constructionSiteId)
+        {
+            var signs = _signContainer.GetItemLinqQueryable<Sign>(true)
+            .Where(p => p.CSId == constructionSiteId)
             .AsEnumerable()
             .ToList();
 
@@ -49,9 +59,9 @@ namespace Safesign.Services
         }
 
         // In progress
-       public async Task<Sign> Add(string id, string planId, float angle)
+       public async Task<Sign> Add(string id, string csId, string planId, float angle)
         {
-            Sign sign = new Sign(id, planId, angle);
+            Sign sign = new Sign(id, csId, planId, angle);
             return await _signContainer.CreateItemAsync<Sign>(sign);
         }
 

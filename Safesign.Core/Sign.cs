@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Security.Claims;
+using Newtonsoft.Json;
 
 namespace Safesign.Core
 {
@@ -8,7 +9,9 @@ namespace Safesign.Core
        // public string Id { get;set; }
         
         public string Id { get; set; }
-        public string ProjectId { get; set; } 
+        public string CSId {get; set; }
+        public string ProjectId { get; set; }
+        
         // public float Angle { get; set; }
         
         // change these into GeoCoordinator class later?
@@ -18,8 +21,9 @@ namespace Safesign.Core
         public float OgAngle {get; set; }
         public float CurrAngle {get; set; }
         public Sign () {}
-        public Sign(string id, string projectId, float ogAngle) {
+        public Sign(string id, string csId, string projectId, float ogAngle) {
             Id = id;
+            CSId = csId;
             ProjectId = projectId;
             OgAngle = ogAngle;
             CurrAngle = ogAngle;

@@ -12,6 +12,7 @@ namespace Safesign.Core
     {
         [JsonProperty("id")]
         public string Id { get; set; }
+        public string CSId {get; set; }
         public List<Sign> Signs {get; set;}
        //public MainReSponsible? MResponsible { get; set; }
         public string? Responsible { get; set; }

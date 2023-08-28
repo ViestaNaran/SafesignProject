@@ -83,7 +83,7 @@ namespace Safesign.Services
             int randomNumber = random.Next(101);
             string tId = randomNumber.ToString();
             float tANgle = 80;
-            var sign = await _signService.Add(tId, plan.Id, tANgle);
+            var sign = await _signService.Add(tId, plan.CSId, plan.Id, tANgle);
             plan.Signs.Add(sign);
 
             return await Update(planId, plan);
