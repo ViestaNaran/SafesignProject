@@ -8,5 +8,8 @@ public class PlanRequestModel
     public string Id { get; set; }
     
     [Required]
+    public string CSId {get; set; }
+    [Required]
     public string Responsible { get; set; }
+
 }

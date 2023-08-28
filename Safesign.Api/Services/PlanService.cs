@@ -43,18 +43,24 @@ namespace Safesign.Services
             return await _signService.GetSignsByPlanId(planId);
         }
 
-
        public async Task<Plan> Add(Plan plan)
         {
-            plan.Signs = new List<Sign>();
+           // plan.Signs = new List<Sign>();
             return await _planContainer.CreateItemAsync<Plan>(plan);
         }
 
        public async Task<Plan> Delete(string id)
        {
-           var plan = Get(id);
+           var plan = await Get(id);
            if (plan is null)
                return null;
+
+            var planSigns = await _signService.GetSignsByPlanId(plan.Id);
+            
+            foreach(Sign s in planSigns) 
+            {
+                await _signService.Delete(s.Id);
+            }
 
            return await _planContainer.DeleteItemAsync<Plan>(id, new PartitionKey(id));
        }
@@ -68,25 +74,26 @@ namespace Safesign.Services
            return await _planContainer.ReplaceItemAsync<Plan>(plan, id, new PartitionKey(id));
        }
     
-        public async Task<Plan> AddSignToPlan(string planId) 
-        {    
-            var plan = _planContainer.GetItemLinqQueryable<Plan>(true)
-            .Where(p => p.Id == planId)
-            .AsEnumerable()
-            .FirstOrDefault();
+        // Obsolete after 28-08-2023 Signs and Plans will be separate to not include ekstra work keeping the database up to date
+        // public async Task<Plan> AddSignToPlan(string planId) 
+        // {    
+        //     var plan = _planContainer.GetItemLinqQueryable<Plan>(true)
+        //     .Where(p => p.Id == planId)
+        //     .AsEnumerable()
+        //     .FirstOrDefault();
 
-            if(plan == null) {
-                return null;
-            }
-            //string tId = "20";
-            //Guid tId = new Guid();
-            int randomNumber = random.Next(101);
-            string tId = randomNumber.ToString();
-            float tANgle = 80;
-            var sign = await _signService.Add(tId, plan.CSId, plan.Id, tANgle);
-            plan.Signs.Add(sign);
+        //     if(plan == null) {
+        //         return null;
+        //     }
+        //     //string tId = "20";
+        //     //Guid tId = new Guid();
+        //     int randomNumber = random.Next(101);
+        //     string tId = randomNumber.ToString();
+        //     float tANgle = 80;
+        //     var sign = await _signService.Add(tId, plan.CSId, plan.Id, tANgle);
+        //     //plan.Signs.Add(sign);
 
-            return await Update(planId, plan);
-        }
+        //     return await Update(planId, plan);
+        // }
    }
 }

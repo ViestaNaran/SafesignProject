@@ -49,7 +49,7 @@ public class PlanController : ControllerBase
     {
         if (ModelState.IsValid)
         {
-            Plan plan = new Plan(model.Id, model.Responsible);
+            Plan plan = new Plan(model.Id, model.CSId, model.Responsible);
             var createdPlan = await _planService.Add(plan);
             return CreatedAtAction(nameof(Get), new { id = createdPlan.Id }, createdPlan);
         }
@@ -63,12 +63,12 @@ public class PlanController : ControllerBase
         return CreatedAtAction(nameof(Get), new { id = plan.Id }, plan);
     }
 
-    [HttpPut("{id}/sign")]
-    public async Task<IActionResult> AddSign(string id, Plan plan)
-    {
-        await _planService.AddSignToPlan(id);
-        return CreatedAtAction(nameof(Get), new {id = plan.Id}, plan);
-    }
+    // [HttpPut("{id}/sign")]
+    // public async Task<IActionResult> AddSign(string id, Plan plan)
+    // {
+    //     await _planService.AddSignToPlan(id);
+    //     return CreatedAtAction(nameof(Get), new {id = plan.Id}, plan);
+    // }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)
