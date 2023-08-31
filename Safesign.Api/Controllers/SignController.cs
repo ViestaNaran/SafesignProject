@@ -66,4 +66,13 @@ public class SignController : ControllerBase
         await _signService.Delete(id);
         return NoContent();
     }
+    
+    [HttpGet("CheckSignAngle/{signId}")]
+    public async Task<IActionResult> CheckSignAngle(string signId)
+    {
+        bool isAngleValid = await _signService.CheckSignAngle(signId);
+
+        return Ok(isAngleValid);
+    }
+
 }
