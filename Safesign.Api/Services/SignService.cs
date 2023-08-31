@@ -37,7 +37,7 @@ namespace Safesign.Services
         public async Task<List<Sign>> GetSignsByPlanId(string planId)
         {
             var signs = _signContainer.GetItemLinqQueryable<Sign>(true)
-            .Where(p => p.ProjectId == planId)
+            .Where(p => p.PlanId == planId)
             .AsEnumerable()
             .ToList();
 
@@ -87,6 +87,7 @@ namespace Safesign.Services
         public async Task<bool> CheckSignAngle(string signId) {
             
             var sign = await Get(signId);
+
             if(sign == null) {
                 return false;
             }    

@@ -67,7 +67,7 @@ public class SignController : ControllerBase
         return NoContent();
     }
     
-    [HttpGet("CheckSignAngle/{signId}")]
+    [HttpGet("checksignangle/{signId}")]
     public async Task<IActionResult> CheckSignAngle(string signId)
     {
         bool isAngleValid = await _signService.CheckSignAngle(signId);

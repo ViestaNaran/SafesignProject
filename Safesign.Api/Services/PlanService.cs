@@ -73,27 +73,5 @@ namespace Safesign.Services
            }
            return await _planContainer.ReplaceItemAsync<Plan>(plan, id, new PartitionKey(id));
        }
-    
-        // Obsolete after 28-08-2023 Signs and Plans will be separate to not include ekstra work keeping the database up to date
-        // public async Task<Plan> AddSignToPlan(string planId) 
-        // {    
-        //     var plan = _planContainer.GetItemLinqQueryable<Plan>(true)
-        //     .Where(p => p.Id == planId)
-        //     .AsEnumerable()
-        //     .FirstOrDefault();
-
-        //     if(plan == null) {
-        //         return null;
-        //     }
-        //     //string tId = "20";
-        //     //Guid tId = new Guid();
-        //     int randomNumber = random.Next(101);
-        //     string tId = randomNumber.ToString();
-        //     float tANgle = 80;
-        //     var sign = await _signService.Add(tId, plan.CSId, plan.Id, tANgle);
-        //     //plan.Signs.Add(sign);
-
-        //     return await Update(planId, plan);
-        // }
    }
 }
