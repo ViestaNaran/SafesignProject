@@ -6,7 +6,6 @@ public class PlanRequestModel
 {
     [Required]
     public string Id { get; set; }
-    
     [Required]
     public string CSId {get; set; }
     [Required]
