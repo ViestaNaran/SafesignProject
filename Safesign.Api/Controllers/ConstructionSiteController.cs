@@ -67,13 +67,9 @@ namespace Safesign.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var deletedConstructionSite = await _cSService.Delete(id);
+            await _cSService.Delete(id);
             
-            if (deletedConstructionSite == null)
-            {
-                return NotFound();
-            }
-            return Ok(deletedConstructionSite);
+            return NoContent();
         }
     
     }

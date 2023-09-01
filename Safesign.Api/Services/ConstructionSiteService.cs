@@ -4,20 +4,22 @@ using Safesign.Data;
 using System;
 using System.Security.Cryptography;
 using Safesign.Services;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Safesign.Services
 {
     public class ConstructionSiteService
     {
         private readonly Container _constructionSitesContainer;
+        private readonly PlanService _planService;
         private readonly SignService _signService;
-       
 
-        public ConstructionSiteService(CosmosConnection connection, SignService signService)
+        public ConstructionSiteService(CosmosConnection connection, PlanService planService, SignService signService)
         {
             var client = new CosmosClient(connection.EndpointUri, connection.PrimaryKey);
             var db = client.GetDatabase(connection.SafesignDB);
             _constructionSitesContainer = db.GetContainer(connection.ConstructionSiteContainer);
+            _planService = planService;
             _signService = signService;
         }
 
@@ -42,6 +44,15 @@ namespace Safesign.Services
             return await _constructionSitesContainer.CreateItemAsync<ConstructionSite>(csSite);
         }
 
+        public async Task<ConstructionSite> CreateCSsite1(ConstructionSite csSite)
+        {
+        // Generate a unique ID for the ConstructionSite
+            csSite.Id = Guid.NewGuid().ToString();
+
+        // Create the ConstructionSite in the database
+            return await _constructionSitesContainer.CreateItemAsync<ConstructionSite>(csSite);
+        }
+
         public async Task<ConstructionSite> Delete(string id) {
             var csSite = await Get(id);
 
@@ -49,8 +60,21 @@ namespace Safesign.Services
                 return null;
             }
 
-            return await _constructionSitesContainer.
-            DeleteItemAsync<ConstructionSite>(id, new PartitionKey(id));
+            if(csSite.planId != null)
+            {
+                await _planService.Delete(csSite.planId);
+            }
+            
+            var signs = await _signService.GetSignsByCSId(id);
+            
+            foreach(Sign s in signs) 
+            {
+                if(s == null) {  
+                    continue;
+                }
+                await _signService.Delete(s.Id);
+            }
+            return await _constructionSitesContainer.DeleteItemAsync<ConstructionSite>(id, new PartitionKey(id));
         }
 
         public async Task<ConstructionSite> Update(string id, ConstructionSite csSite)
@@ -64,9 +88,6 @@ namespace Safesign.Services
 
         public async Task<ConstructionSite> CreateCSSiteWithSigns(ConstructionSite csSite, List<Sign> signs)
         {
-            // if(signs.Count == 0) {
-                
-            // }
             foreach(Sign s in signs) {
                 await _signService.Add(s);
             }
