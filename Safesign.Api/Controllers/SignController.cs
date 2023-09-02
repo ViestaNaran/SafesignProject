@@ -46,6 +46,18 @@ public class SignController : ControllerBase
         return Ok(signs);
     }
 
+    [HttpGet("plan/{Id}")]
+    public async Task<IActionResult> GetByPlanId(string id)
+    {
+        var signs = await _signService.GetSignsByPlanId(id);
+
+        if (signs == null)
+        {
+            return NotFound(new {message = "Sign not found"});
+        }
+        return Ok(signs);
+    }
+
     //POST action
     [HttpPost]
     public async Task<IActionResult> CreateSign(Sign sign)
