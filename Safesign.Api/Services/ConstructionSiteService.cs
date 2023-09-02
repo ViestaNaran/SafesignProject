@@ -60,9 +60,9 @@ namespace Safesign.Services
                 return null;
             }
 
-            if(csSite.planId != null)
+            if(csSite.PlanId != null)
             {
-                await _planService.Delete(csSite.planId);
+                await _planService.Delete(csSite.PlanId);
             }
             
             var signs = await _signService.GetSignsByCSId(id);

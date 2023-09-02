@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Safesign.Core
 {
