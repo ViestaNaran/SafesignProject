@@ -4,6 +4,10 @@ namespace Safesign.Core
 {
     public class ConstructionSite
     {
+
+
+
+        
         [JsonProperty("id")]
         public string Id { get; set; }
         // public string Address { get; set; }
