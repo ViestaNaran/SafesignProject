@@ -87,9 +87,9 @@ namespace Safesign.AzureFunction
                     // Angle changed
                     if(i.CurrAngle < i.OgAngle - angleOffSet || i.CurrAngle > i.OgAngle + angleOffSet) 
                     {
-                        _logger.LogInformation($"Sign {i.Id} in project {i.ProjectId} is angled incorrectly");
+                        _logger.LogInformation($"Sign {i.Id} in project {i.PlanId} is angled incorrectly");
                         await Task.Run(() => {
-                            return new SignalRMessageAction("SignAngleIssue", new object[] {i.Id,i.ProjectId,i.CurrAngle});
+                            return new SignalRMessageAction("SignAngleIssue", new object[] {i.Id,i.PlanId,i.CurrAngle});
                         });
                     } 
                 }
