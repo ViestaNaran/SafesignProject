@@ -14,7 +14,7 @@
 *.userprefs
 
 # Azure connection settings
-Safesign.Api/appsettings.Development.json
+appsettings.Development.json
 
 # Mono auto generated files
 mono_crash.*
