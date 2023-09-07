@@ -19,10 +19,16 @@ namespace Safesign.Api.Controllers
             _sService = sService;
         }
 
-      [HttpPut("{id}")]
+      [HttpPost]
        public async Task<IActionResult> CreateRandom(JsonObject randomObject) {
 
-            return Ok(await _sService.CreateRandom1(randomObject));
+            var result = await _sService.CreateRandom1(randomObject);
+
+            if(result == null) {
+                return BadRequest();
+            }
+
+            return Ok(result);
         }
     }
 }

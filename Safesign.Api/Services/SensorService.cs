@@ -1,6 +1,7 @@
 using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos.Linq;
 using Safesign.Core;
 using Safesign.Data;
 
@@ -21,7 +22,13 @@ public class SensorService
     public async Task<TestModel> CreateRandom1(JsonObject randomObject) {
     
     Console.WriteLine(randomObject);
-    
+
+    int type = (int)randomObject["type"];
+
+    if(type != 1) {
+        return null;
+    }
+
     float xValue = (float)randomObject["x0"];
     float yValue = (float)randomObject["y0"];
     float zValue = (float)randomObject["z0"];
@@ -38,12 +45,15 @@ public class SensorService
         .AsEnumerable()
         .ToList();
 
-    Console.WriteLine(lookedUpModel);
 
-    if(lookedUpModel.Count < 1) {
-        return await _sensorContainer.CreateItemAsync<TestModel>(TestObject);
-    } else {
+    foreach(TestModel tm in lookedUpModel) {
+        Console.WriteLine($"id: {tm.id}");
+    }
+
+    if(lookedUpModel.Count > 0) {
         return await _sensorContainer.ReplaceItemAsync<TestModel>(TestObject, id, new PartitionKey(id));
+    } else {
+        return await _sensorContainer.CreateItemAsync<TestModel>(TestObject);
         }
     }
 }
