@@ -97,7 +97,6 @@ namespace Safesign.Services
             } else {
                 return false;
             }
-
         }
    }
 }

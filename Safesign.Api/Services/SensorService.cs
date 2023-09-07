@@ -20,7 +20,6 @@ public class SensorService
 
     public async Task<TestModel> CreateRandom1(JsonObject randomObject) {
     
-    
     Console.WriteLine(randomObject);
     
     float xValue = (float)randomObject["x0"];
@@ -34,8 +33,17 @@ public class SensorService
     
     Console.WriteLine($"x:{TestObject.x}, y: {TestObject.y}, z: {TestObject.z}, id: {TestObject.id}");
 
-    return await _sensorContainer.CreateItemAsync<TestModel>(TestObject);       
-}
+    var lookedUpModel = _sensorContainer.GetItemLinqQueryable<TestModel>(true)
+        .Where(p => p.id == id)
+        .AsEnumerable()
+        .ToList();
 
+    Console.WriteLine(lookedUpModel);
 
+    if(lookedUpModel.Count < 1) {
+        return await _sensorContainer.CreateItemAsync<TestModel>(TestObject);
+    } else {
+        return await _sensorContainer.ReplaceItemAsync<TestModel>(TestObject, id, new PartitionKey(id));
+        }
+    }
 }
