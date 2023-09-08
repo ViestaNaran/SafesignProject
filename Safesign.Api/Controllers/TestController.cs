@@ -24,8 +24,14 @@ namespace Safesign.Api.Controllers
 
             var result = await _sService.CreateRandom1(randomObject);
 
+            
             if(result == null) {
-                return BadRequest();
+                 var errorResponse = new {
+                Message = "The request is invalid. Message has the wrong type.",
+                AdditionalInfo = "Only type 1 messages are taken at this stage."
+                };
+            
+                return BadRequest(errorResponse);
             }
 
             return Ok(result);

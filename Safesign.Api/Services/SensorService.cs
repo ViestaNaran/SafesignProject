@@ -25,35 +25,35 @@ public class SensorService
 
     int type = (int)randomObject["type"];
 
-    if(type != 1) {
-        return null;
-    }
-
-    float xValue = (float)randomObject["x0"];
-    float yValue = (float)randomObject["y0"];
-    float zValue = (float)randomObject["z0"];
-    string id = (string)randomObject["dmac"];
-
-    Console.WriteLine($"x:{xValue}, y: {yValue}, z: {zValue}, id: {id}");
-
-    TestModel TestObject = new TestModel(id, xValue, yValue, zValue);
+    if(type == 1) {
+       // return null;
     
-    Console.WriteLine($"x:{TestObject.x}, y: {TestObject.y}, z: {TestObject.z}, id: {TestObject.id}");
+        float xValue = (float)randomObject["x0"];
+        float yValue = (float)randomObject["y0"];
+        float zValue = (float)randomObject["z0"];
+        string id = (string)randomObject["dmac"];
 
-    var lookedUpModel = _sensorContainer.GetItemLinqQueryable<TestModel>(true)
-        .Where(p => p.id == id)
-        .AsEnumerable()
-        .ToList();
+        Console.WriteLine($"x:{xValue}, y: {yValue}, z: {zValue}, id: {id}");
+
+        TestModel TestObject = new TestModel(id, xValue, yValue, zValue);
+        
+        Console.WriteLine($"x:{TestObject.x}, y: {TestObject.y}, z: {TestObject.z}, id: {TestObject.id}");
+
+        var lookedUpModel = _sensorContainer.GetItemLinqQueryable<TestModel>(true)
+            .Where(p => p.id == id)
+            .AsEnumerable()
+            .ToList();
 
 
-    foreach(TestModel tm in lookedUpModel) {
-        Console.WriteLine($"id: {tm.id}");
-    }
-
-    if(lookedUpModel.Count > 0) {
-        return await _sensorContainer.ReplaceItemAsync<TestModel>(TestObject, id, new PartitionKey(id));
-    } else {
-        return await _sensorContainer.CreateItemAsync<TestModel>(TestObject);
+        foreach(TestModel tm in lookedUpModel) {
+            Console.WriteLine($"id: {tm.id}");
         }
+
+        if(lookedUpModel.Count > 0) {
+            return await _sensorContainer.ReplaceItemAsync<TestModel>(TestObject, id, new PartitionKey(id));
+        } else {
+            return await _sensorContainer.CreateItemAsync<TestModel>(TestObject);
+            }
+        } else {return null;}
     }
 }
