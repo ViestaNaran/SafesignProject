@@ -78,7 +78,6 @@ namespace Safesign.AzureFunction
         [Function(nameof(DetectAngleChange2))]
         [SignalROutput(HubName = "serverless")]
         public SignalRMessageAction DetectAngleChange2(
-            //[HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData requestData,
             [CosmosDBTrigger(
             databaseName: "Safesign",
             collectionName: "Signs",
@@ -102,6 +101,41 @@ namespace Safesign.AzureFunction
                         _logger.LogInformation($"Sign {i.Id} in project {i.PlanId} is angled incorrectly");
                        // await Task.Run(() => {
                         return new SignalRMessageAction("SignAngleIssue", new object[] {i});
+                       // });
+                    }
+                }
+            }
+            return null;
+        }
+
+        [Function(nameof(DetectZChanges))]
+        [SignalROutput(HubName = "serverless")]
+        public SignalRMessageAction DetectZChanges(
+            [CosmosDBTrigger(
+            databaseName: "ToDoList",
+            collectionName: "SensorTest",
+            ConnectionStringSetting = "CosmosConnectionString", CreateLeaseCollectionIfNotExists = true,
+            LeaseCollectionName = "SensorLeases")] IReadOnlyList<xyzData> input
+            )
+        {
+            _logger.LogInformation("DetectSensorchanges running!");
+
+            if(input != null && input.Count > 0) 
+            {
+                _logger.LogInformation($"Documents Modified: {input.Count}");
+                
+                foreach(var i in input) 
+                {
+                    Console.WriteLine(i);
+                    _logger.LogInformation($"i = {i}, {i.z}");
+                    _logger.LogInformation($"Sensor Modified: {i.id}");
+                  
+                    // Angle changed
+                    if(i.z <= 0) 
+                    {
+                        _logger.LogInformation($"Sensor {i.id} has z less than -200");
+                       // await Task.Run(() => {
+                        return new SignalRMessageAction("SensorDataIssue", new object[] {i});
                        // });
                     }
                 }

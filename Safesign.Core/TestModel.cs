@@ -32,7 +32,11 @@ public class SensorData
     public string gmac { get; set; }
 }
 
-public class InternalSensorData {
+public class xyzData {
 
+    public string id {get; set;}
+    public float x {get; set;}
+    public float y {get; set;}
+    public float z {get; set;}
 
 }
