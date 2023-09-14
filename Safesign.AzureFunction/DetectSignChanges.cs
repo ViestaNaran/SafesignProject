@@ -33,47 +33,12 @@ namespace Safesign.AzureFunction
         }
 
 
-
         public DetectSignChanges(ILoggerFactory loggerFactory, IHttpClientFactory httpClientFactory) 
         {
             _logger = loggerFactory.CreateLogger<DetectSignChanges>();
             _httpClient = httpClientFactory.CreateClient("Api");
         }
 
-        //[Function("DetectSignChanges")]
-        // [Function(nameof(DetectAngleChange))]
-        // [SignalROutput(HubName = "SignHub", ConnectionStringSetting = "AzureSignalRConnectionString")]
-        // public async Task<SignalRMessageAction> DetectAngleChange(
-        //     //[HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData requestData,
-        //     [CosmosDBTrigger(
-        //     databaseName: "Safesign",
-        //     collectionName: "Signs",
-        //     ConnectionStringSetting = "CosmosConnectionString", CreateLeaseCollectionIfNotExists = true,
-        //     LeaseCollectionName = "SignLeases")] IReadOnlyList<Sign> input
-        //     )
-        // {
-        //     _logger.LogInformation("DetectSignChanges running!");
-
-        //     if(input != null && input.Count > 0) 
-        //     {
-        //         _logger.LogInformation($"Documents Modified: {input.Count}");
-                
-        //         foreach(var i in input) 
-        //         {
-        //             _logger.LogInformation($"SignModified: {i.Id}");
-                    
-        //             // Angle changed
-        //             if(i.CurrAngle < i.OgAngle - angleOffSet || i.CurrAngle > i.OgAngle + angleOffSet) 
-        //             {
-        //                 _logger.LogInformation($"Sign {i.Id} in project {i.ProjectId} is angled incorrectly");
-        //                 await Task.Run(() => {
-        //                     return new SignalRMessageAction("SignAngleIssue", new object[] {i.Id,i.ProjectId,i.CurrAngle});
-        //                 });
-        //             }
-        //         }
-        //     }
-        //     return null;
-        // }
 
         [Function(nameof(DetectAngleChange2))]
         [SignalROutput(HubName = "serverless")]
@@ -96,7 +61,7 @@ namespace Safesign.AzureFunction
                     _logger.LogInformation($"SignModified: {i.Id}");
                     
                     // Angle changed
-                    if(i.CurrAngle < i.OgAngle - angleOffSet || i.CurrAngle > i.OgAngle + angleOffSet) 
+                    if(i.CurrAngle < i.OgAngle - angleOffSet || i.CurrAngle > i.OgAngle + angleOffSet)
                     {
                         _logger.LogInformation($"Sign {i.Id} in project {i.PlanId} is angled incorrectly");
                        // await Task.Run(() => {
@@ -108,6 +73,41 @@ namespace Safesign.AzureFunction
             return null;
         }
 
+        // [Function(nameof(DetectZChanges))]
+        // [SignalROutput(HubName = "serverless")]
+        // public SignalRMessageAction DetectZChanges(
+        //     [CosmosDBTrigger(
+        //     databaseName: "ToDoList",
+        //     collectionName: "SensorTest",
+        //     ConnectionStringSetting = "CosmosConnectionString", CreateLeaseCollectionIfNotExists = true,
+        //     LeaseCollectionName = "SensorLeases")] IReadOnlyList<xyzData> input
+        //     )
+        // {
+        //     _logger.LogInformation("DetectSensorchanges running!");
+
+        //     if(input != null && input.Count > 0) 
+        //     {
+        //         _logger.LogInformation($"Documents Modified: {input.Count}");
+                
+        //         foreach(var i in input) 
+        //         {
+        //             Console.WriteLine(i);
+        //             _logger.LogInformation($"i = {i}, {i.z}");
+        //             _logger.LogInformation($"Sensor Modified: {i.id}");
+                  
+        //             // Angle changed
+        //             if(i.z <= 0) 
+        //             {
+        //                 _logger.LogInformation($"Sensor {i.id} has z less than -200");
+        //                // await Task.Run(() => {
+        //                 return new SignalRMessageAction("SensorDataIssue", new object[] {i});
+        //                // });
+        //             }
+        //         }
+        //     }
+        //     return null;
+        // }
+
         [Function(nameof(DetectZChanges))]
         [SignalROutput(HubName = "serverless")]
         public SignalRMessageAction DetectZChanges(
@@ -115,7 +115,7 @@ namespace Safesign.AzureFunction
             databaseName: "ToDoList",
             collectionName: "SensorTest",
             ConnectionStringSetting = "CosmosConnectionString", CreateLeaseCollectionIfNotExists = true,
-            LeaseCollectionName = "SensorLeases")] IReadOnlyList<xyzData> input
+            LeaseCollectionName = "SensorLeases")] IReadOnlyList<Sign> input
             )
         {
             _logger.LogInformation("DetectSensorchanges running!");
@@ -127,13 +127,13 @@ namespace Safesign.AzureFunction
                 foreach(var i in input) 
                 {
                     Console.WriteLine(i);
-                    _logger.LogInformation($"i = {i}, {i.z}");
-                    _logger.LogInformation($"Sensor Modified: {i.id}");
+                    _logger.LogInformation($"i = {i}, {i.OgZ}");
+                    _logger.LogInformation($"Sensor Modified: {i.SensorId}, on Sign: {i.Id}");
                   
                     // Angle changed
-                    if(i.z <= 0) 
+                    if(i.CurrZ <= 0) 
                     {
-                        _logger.LogInformation($"Sensor {i.id} has z less than -200");
+                        _logger.LogInformation($"Sensor {i.SensorId} has z less than -200");
                        // await Task.Run(() => {
                         return new SignalRMessageAction("SensorDataIssue", new object[] {i});
                        // });
@@ -142,5 +142,6 @@ namespace Safesign.AzureFunction
             }
             return null;
         }
+
     } // Class end
 } // Namespace end

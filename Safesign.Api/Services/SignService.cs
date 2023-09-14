@@ -54,6 +54,16 @@ namespace Safesign.Services
             return signs;
         }
 
+        public async Task<Sign> GetSignBySensorMac(string sensorDmac)
+        {
+            var sign = _signContainer.GetItemLinqQueryable<Sign>(true)
+            .Where(p => p.SensorId == sensorDmac)
+            .AsEnumerable()
+            .FirstOrDefault();
+
+            return sign;
+        }
+
         public async Task<Sign> Add(Sign sign)
         {
             return await _signContainer.CreateItemAsync<Sign>(sign);
@@ -98,5 +108,35 @@ namespace Safesign.Services
                 return false;
             }
         }
+
+        public async Task<Sign> UpdateSensorId(string signId, string newSensorId)
+        {
+            // 1. Retrieve the existing Sign object by its ID from your data store.
+            var existingSign = await Get(signId);
+
+            if (existingSign == null)
+            {
+                // Handle the case where the Sign with the specified ID doesn't exist.
+                return null;
+            }
+
+            // 2. Update the "SensorId" property with the new value.
+            existingSign.SensorId = newSensorId;
+
+            // 3. Save the updated Sign object back to your data store.
+            var updatedSign = await Update(existingSign.Id, existingSign);
+
+            return updatedSign;
+        }
+
+        public async Task<Sign> CreateSignWithSensor(string csId, string planId, string macId) 
+        {
+            Random random = new Random();
+            string id = random.Next().ToString();
+
+            Sign s = new Sign(id, csId, planId, macId);
+
+            return await _signContainer.CreateItemAsync<Sign>(s);
+        } 
    }
 }

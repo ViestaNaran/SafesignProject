@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.CodeDom.Compiler;
+using Newtonsoft.Json;
 
 namespace Safesign.Core
 {
@@ -10,6 +11,30 @@ namespace Safesign.Core
         public string PlanId { get; set; }
         public float OgAngle {get; set; }
         public float CurrAngle {get; set; }
+
+        
+        // Sensor reading values
+        [JsonProperty("dmac")]
+        public string SensorId {get; set;}
+
+        [JsonProperty("type")]
+        public int Type {get; set;}
+
+        [JsonProperty("z0")]
+        public float OgX {get; set; }
+        public float CurrX {get; set;}
+        
+        [JsonProperty("y0")]
+        public float OgY {get; set; }
+        public float CurrY {get; set; }
+
+        [JsonProperty("x0")]
+        public float OgZ {get; set; }
+        public float CurrZ {get; set; }
+        
+        public TestModel TestSensorData {get; set;}
+
+
         public Sign () {}
         public Sign(string id, string csId, string planId, float ogAngle) {
             Id = id;
@@ -17,6 +42,12 @@ namespace Safesign.Core
             PlanId = planId;
             OgAngle = ogAngle;
             CurrAngle = ogAngle;
+        }
+        public Sign(string id, string csId, string planId, string macId) {
+            Id = id;
+            CSId = csId;
+            PlanId = planId;
+            SensorId = macId;
         }
     }
 }

@@ -71,6 +71,5 @@ namespace Safesign.Api.Controllers
             
             return NoContent();
         }
-    
     }
 }

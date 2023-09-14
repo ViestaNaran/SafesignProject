@@ -65,6 +65,12 @@ public class SignController : ControllerBase
         return Ok(await _signService.Add(sign));
     }
 
+    [HttpPost("sensor")]
+    public async Task<IActionResult> CreateSignWithSensor(string csId, string planId, string macId)
+    {
+        return Ok(await _signService.CreateSignWithSensor(csId, planId, macId));
+    }
+
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(string id, Sign sign)
     {
@@ -86,5 +92,24 @@ public class SignController : ControllerBase
 
         return Ok(isAngleValid);
     }
+
+    [HttpPut("{Id}/updatesensorid")]
+    public async Task<IActionResult> UpdateSensorId(string signId, string newSensorId)
+    {
+    // Call the service method to update the "SensorId" value.
+    var updatedSign = await _signService.UpdateSensorId(signId, newSensorId);
+
+    if (updatedSign == null)
+    {
+        // Handle the case where the Sign with the specified ID doesn't exist.
+        return NotFound($"Sign with ID {signId} not found.");
+    }
+        return Ok(updatedSign);
+    }
+
+
+
+
+
 
 }
