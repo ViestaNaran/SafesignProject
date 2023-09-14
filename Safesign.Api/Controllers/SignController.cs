@@ -66,10 +66,11 @@ public class SignController : ControllerBase
     }
 
     [HttpPost("sensor")]
-    public async Task<IActionResult> CreateSignWithSensor(string csId, string planId, string macId)
+    public async Task<IActionResult> CreateSignWithSensor(string id, string csId, string planId, string macId)
     {
-        return Ok(await _signService.CreateSignWithSensor(csId, planId, macId));
+        return Ok(await _signService.CreateSignWithSensor(id ,csId, planId, macId));
     }
+
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(string id, Sign sign)
@@ -106,10 +107,5 @@ public class SignController : ControllerBase
     }
         return Ok(updatedSign);
     }
-
-
-
-
-
 
 }

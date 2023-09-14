@@ -109,6 +109,23 @@ namespace Safesign.Services
             }
         }
 
+         public async Task<bool> CheckSignXYZ(string signId) {
+            
+            var sign = await Get(signId);
+
+            if(sign == null) {
+                return false;
+            }    
+
+            if(sign.CurrAngle >= sign.OgAngle-signOffset && sign.CurrAngle <= sign.OgAngle+signOffset) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+
+
         public async Task<Sign> UpdateSensorId(string signId, string newSensorId)
         {
             // 1. Retrieve the existing Sign object by its ID from your data store.
@@ -129,10 +146,10 @@ namespace Safesign.Services
             return updatedSign;
         }
 
-        public async Task<Sign> CreateSignWithSensor(string csId, string planId, string macId) 
+        public async Task<Sign> CreateSignWithSensor(string id, string csId, string planId, string macId) 
         {
-            Random random = new Random();
-            string id = random.Next().ToString();
+           // Random random = new Random();
+           // string id = random.Next().ToString();
 
             Sign s = new Sign(id, csId, planId, macId);
 

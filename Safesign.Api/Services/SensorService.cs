@@ -42,6 +42,7 @@ public class SensorService
                 Console.WriteLine($"id: {tm.dmac}");
             }
 
+
             if (lookedUpModel.Count > 0)
             {
 
@@ -60,23 +61,20 @@ public class SensorService
 
     public async Task<Sign> UpdateSensorData(SensorData sensorData)
         {
-        Console.WriteLine("CreateRandom2 called");
-        Console.WriteLine(sensorData + "\n");
-
+      
         if (sensorData.msg == "advData" && sensorData.obj.Count > 0 && sensorData.obj[0].type == 1)
         {
             TestModel reading = sensorData.obj[0];
 
             var signToUpdate = await _signService.GetSignBySensorMac(reading.dmac);
-            
-            
+             
             Console.WriteLine($"SensorReading: {reading}");
             Console.WriteLine($"Sign: {signToUpdate}");
 
-            var lookedUpModel = _sensorContainer.GetItemLinqQueryable<TestModel>(true)
-                .Where(p => p.dmac == reading.dmac)
-                .AsEnumerable()
-                .FirstOrDefault();
+            // var lookedUpModel = _sensorContainer.GetItemLinqQueryable<TestModel>(true)
+            //     .Where(p => p.dmac == reading.dmac)
+            //     .AsEnumerable()
+            //     .FirstOrDefault();
 
 
             //  Case: Sensor with this id exists, Update the sign associated with the sensor in the database.
@@ -86,17 +84,12 @@ public class SensorService
                 signToUpdate.CurrY = reading.y0;
                 signToUpdate.CurrZ = reading.z0;
 
-                signToUpdate.TestSensorData = reading;
-                
                 return await _signService.Update(signToUpdate.Id, signToUpdate);
             }
-            
             // Case: Sensor with this Id does not exist. Add to database.
             else
-            {
-                
+            {    
                 return null;
-            // return await _sensorContainer.CreateItemAsync<Sign>(reading);
             }
         }
         else

@@ -24,7 +24,7 @@ namespace Safesign.Api.Controllers
             return Ok(await _cSService.GetAll());
         }
 
-            [HttpGet("{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
         var constructionSite = await _cSService.Get(id);
@@ -36,6 +36,7 @@ namespace Safesign.Api.Controllers
         
             return Ok(constructionSite);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ConstructionSite constructionSite)
@@ -50,6 +51,15 @@ namespace Safesign.Api.Controllers
             var createdConstructionSite = await _cSService.CreateCSSiteWithSigns(csModel.CSSite, csModel.Signs);
             return CreatedAtAction(nameof(Get), new { id = createdConstructionSite.Id }, createdConstructionSite);
         }
+
+        [HttpPost("sensor")]
+        public async Task<IActionResult> CreateWithSignMacId(ConstructionSiteModel csModel) {
+
+            var createdConstructionSite = await _cSService.CreateCSSiteWithSignMacId(csModel.CSSite, csModel.Signs);
+            return CreatedAtAction(nameof(Get), new { id = createdConstructionSite.Id }, createdConstructionSite);
+        }
+
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] ConstructionSite constructionSite)

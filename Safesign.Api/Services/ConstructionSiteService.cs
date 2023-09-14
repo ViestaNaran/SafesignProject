@@ -94,6 +94,15 @@ namespace Safesign.Services
 
             return await CreateCSsite(csSite);
         }
+
+        public async Task<ConstructionSite> CreateCSSiteWithSignMacId(ConstructionSite csSite, List<Sign> signs)
+        {
+            foreach(Sign s in signs) {
+                await _signService.CreateSignWithSensor(s.Id,s.CSId,s.PlanId,s.SensorId);
+            }
+            
+            return await CreateCSsite(csSite);
+        }
     }
 }
 

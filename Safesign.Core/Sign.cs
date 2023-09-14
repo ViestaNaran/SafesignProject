@@ -32,9 +32,6 @@ namespace Safesign.Core
         public float OgZ {get; set; }
         public float CurrZ {get; set; }
         
-        public TestModel TestSensorData {get; set;}
-
-
         public Sign () {}
         public Sign(string id, string csId, string planId, float ogAngle) {
             Id = id;
@@ -43,11 +40,12 @@ namespace Safesign.Core
             OgAngle = ogAngle;
             CurrAngle = ogAngle;
         }
-        public Sign(string id, string csId, string planId, string macId) {
+
+        public Sign(string id, string csId, string planId, string sensorId) {
             Id = id;
             CSId = csId;
             PlanId = planId;
-            SensorId = macId;
+            SensorId = sensorId;
         }
     }
 }
