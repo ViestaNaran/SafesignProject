@@ -94,6 +94,30 @@ public class SignController : ControllerBase
         return Ok(isAngleValid);
     }
 
+    [HttpGet("checkSignPosition/{signId}")]
+    public async Task<IActionResult> CheckSignPosition(string signId)
+    {
+        (bool? x, bool? y, bool? z) checks = await _signService.CheckSignPosition(signId); 
+        
+        if(checks.x == null || checks.y == null || checks.z == null) {
+            var error = new 
+                {
+                Message = "Sign does not exist"
+                };
+            return BadRequest(error);
+        }
+
+        var response = new {
+            x = checks.x,
+            y = checks.y,
+            z = checks.z
+
+        };
+        
+        return Ok(response);
+    }
+
+
     [HttpPut("{Id}/updatesensorid")]
     public async Task<IActionResult> UpdateSensorId(string signId, string newSensorId)
     {

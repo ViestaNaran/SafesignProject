@@ -1,3 +1,6 @@
+using System.IO.Compression;
+using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Azure.Cosmos;
 using Safesign.Core;
 using Safesign.Data;
@@ -8,7 +11,10 @@ namespace Safesign.Services
    {
         private readonly Container _signContainer;
 
-        private readonly int signOffset = 5;
+        private readonly int signAngleOffSet = 5;
+        private readonly int signPositionOffSet = 40;
+
+
         public SignService(CosmosConnection connection)
         {
             var client = new CosmosClient(connection.EndpointUri, connection.PrimaryKey);
@@ -102,29 +108,57 @@ namespace Safesign.Services
                 return false;
             }    
 
-            if(sign.CurrAngle >= sign.OgAngle-signOffset && sign.CurrAngle <= sign.OgAngle+signOffset) {
+            if(sign.CurrAngle >= sign.OgAngle-signAngleOffSet && sign.CurrAngle <= sign.OgAngle+signAngleOffSet) {
                 return true;
             } else {
                 return false;
             }
         }
 
-         public async Task<bool> CheckSignXYZ(string signId) {
+        private async Task<bool> CheckSignX(Sign sign) {
             
+            if(sign.CurrX >= sign.OgX-signPositionOffSet && sign.CurrX <= sign.OgX+signPositionOffSet) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
+        private async Task<bool> CheckSignY(Sign sign) {
+            
+            if(sign.CurrY >= sign.OgY-signPositionOffSet && sign.CurrY <= sign.OgY+signPositionOffSet) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        private async Task<bool> CheckSignZ(Sign sign) {
+           
+            if(sign.CurrZ >= sign.OgZ-signPositionOffSet && sign.CurrZ <= sign.OgZ+signPositionOffSet) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public async Task<(bool?, bool?, bool?)> CheckSignPosition(string signId)
+        {
             var sign = await Get(signId);
 
+            (bool? x, bool? y, bool? z) n = (x: null, y: null, z: null);
+            
+            // n stands for null here.
             if(sign == null) {
-                return false;
-            }    
-
-            if(sign.CurrAngle >= sign.OgAngle-signOffset && sign.CurrAngle <= sign.OgAngle+signOffset) {
-                return true;
-            } else {
-                return false;
+                return (n);
             }
+
+            n.x = await CheckSignX(sign);
+            n.y = await CheckSignY(sign);
+            n.z = await CheckSignZ(sign);
+
+            return (n);
         }
-
-
 
         public async Task<Sign> UpdateSensorId(string signId, string newSensorId)
         {

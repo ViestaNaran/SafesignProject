@@ -76,7 +76,6 @@ public class SensorService
             //     .AsEnumerable()
             //     .FirstOrDefault();
 
-
             //  Case: Sensor with this id exists, Update the sign associated with the sensor in the database.
             if (signToUpdate != null)
             {    
@@ -86,7 +85,7 @@ public class SensorService
 
                 return await _signService.Update(signToUpdate.Id, signToUpdate);
             }
-            // Case: Sensor with this Id does not exist. Add to database.
+            // Case: The sensor is not equipped to any sign, return null. 
             else
             {    
                 return null;
