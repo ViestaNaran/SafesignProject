@@ -110,6 +110,7 @@ namespace Safesign.AzureFunction
                     if(i.CurrX >= i.OgX-positionOffSet && i.CurrX <= i.OgX+positionOffSet)
                     {
                         _logger.LogInformation($"Sensor {i.SensorId} has z less than -200");
+                        i.Issue += "X";
                         return new SignalRMessageAction("SignPositionIssue", new object[] {i});
                     }
 
@@ -117,14 +118,16 @@ namespace Safesign.AzureFunction
                     if(i.CurrY >= i.OgY-positionOffSet && i.CurrY <= i.OgY+positionOffSet)
                     {
                         _logger.LogInformation($"Sensor {i.SensorId}");
-                        return new SignalRMessageAction("SensorDataIssue", new object[] {i});
+                        i.Issue += "Y";
+                        return new SignalRMessageAction("SignPositionIssue", new object[] {i});
                     }
 
                     // Z coordinate of sign has changed above / Below threshold. 
-                    if(i.CurrZ >= i.OgX-positionOffSet && i.CurrX <= i.OgX+positionOffSet)
+                    if(i.CurrZ >= i.OgZ-positionOffSet && i.CurrZ <= i.OgZ+positionOffSet)
                     {
                         _logger.LogInformation($"Sensor {i.SensorId} has z less than -200");
-                        return new SignalRMessageAction("SensorDataIssue", new object[] {i});
+                        i.Issue += "Z";
+                        return new SignalRMessageAction("SignPositionIssue", new object[] {i});
                     }
                 }
             }

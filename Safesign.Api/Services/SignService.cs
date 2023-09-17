@@ -159,7 +159,7 @@ namespace Safesign.Services
             n.y = await CheckSignY(sign);
             n.z = await CheckSignZ(sign);
 
-            return (n);
+            return n;
         }
 
         public async Task<Sign> UpdateSensorId(string signId, string newSensorId)
