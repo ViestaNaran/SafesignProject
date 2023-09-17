@@ -11,8 +11,7 @@ namespace Safesign.Core
         public string PlanId { get; set; }
         public float OgAngle {get; set; }
         public float CurrAngle {get; set; }
-
-        
+        public string Issue {get; set;}
         // Sensor reading values
         [JsonProperty("dmac")]
         public string SensorId {get; set;}
@@ -20,15 +19,15 @@ namespace Safesign.Core
         [JsonProperty("type")]
         public int Type {get; set;}
 
-        [JsonProperty("z0")]
+        //[JsonProperty("z0")]
         public float OgX {get; set; }
         public float CurrX {get; set;}
         
-        [JsonProperty("y0")]
+        //[JsonProperty("y0")]
         public float OgY {get; set; }
         public float CurrY {get; set; }
 
-        [JsonProperty("x0")]
+        //[JsonProperty("x0")]
         public float OgZ {get; set; }
         public float CurrZ {get; set; }
         

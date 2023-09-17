@@ -10,7 +10,7 @@ namespace Safesign.Services
    public class SignService
    {
         private readonly Container _signContainer;
-
+        private readonly Container _testModelContainer;
         private readonly int signAngleOffSet = 5;
         private readonly int signPositionOffSet = 40;
 
@@ -19,7 +19,9 @@ namespace Safesign.Services
         {
             var client = new CosmosClient(connection.EndpointUri, connection.PrimaryKey);
             var db = client.GetDatabase(connection.SafesignDB);
+            var testDB = client.GetDatabase(connection.TestDB);
             _signContainer = db.GetContainer(connection.SignContainer);
+            _testModelContainer = testDB.GetContainer(connection.SensorContainer);
         }
 
         public async Task<List<Sign>> GetAll()
@@ -182,10 +184,26 @@ namespace Safesign.Services
 
         public async Task<Sign> CreateSignWithSensor(string id, string csId, string planId, string macId) 
         {
-           // Random random = new Random();
-           // string id = random.Next().ToString();
+            // Random random = new Random();
+            // string id = random.Next().ToString();
+            
+            var initialSensorData =  _testModelContainer.GetItemLinqQueryable<TestModel>(true)
+                .Where(p => p.dmac == macId)
+                .AsEnumerable()
+                .FirstOrDefault();
 
-            Sign s = new Sign(id, csId, planId, macId);
+            if(initialSensorData == null) {
+                return null;
+            }
+
+            // OgAngle not set, because we use it as test value, and sensor does not provide an angle.
+            Sign s = new Sign(id, csId, planId, macId)
+            {
+                OgX = initialSensorData.x0,
+                OgY = initialSensorData.y0,
+                OgZ = initialSensorData.z0,
+                Issue = "None"
+            };
 
             return await _signContainer.CreateItemAsync<Sign>(s);
         } 

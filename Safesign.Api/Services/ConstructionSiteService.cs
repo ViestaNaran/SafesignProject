@@ -95,13 +95,20 @@ namespace Safesign.Services
             return await CreateCSsite(csSite);
         }
 
-        public async Task<ConstructionSite> CreateCSSiteWithSignMacId(ConstructionSite csSite, List<Sign> signs)
+        public async Task<(string signId, ConstructionSite csSite)> CreateCSSiteWithSignMacId(ConstructionSite csSite, List<Sign> signs)
         {
-            foreach(Sign s in signs) {
-                await _signService.CreateSignWithSensor(s.Id,s.CSId,s.PlanId,s.SensorId);
+            foreach (Sign s in signs)
+            {
+                var result = await _signService.CreateSignWithSensor(s.Id, s.CSId, s.PlanId, s.SensorId);
+
+                if (result == null)
+                {
+                    // Return the ID of the sign and null value
+                    return (s.Id, null);
+                }
             }
-            
-            return await CreateCSsite(csSite);
+
+            return (null, await CreateCSsite(csSite));
         }
     }
 }

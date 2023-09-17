@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Safesign.Api;
 
+
 [ApiController]
 [Route("[controller]")]
 public class PlanController : ControllerBase 
@@ -13,7 +14,6 @@ public class PlanController : ControllerBase
     public PlanController(PlanService planService) {
         _planService = planService;
     }
-
 
     [HttpGet]
     public async Task<IActionResult> Get() {

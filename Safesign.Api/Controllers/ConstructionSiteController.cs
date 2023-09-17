@@ -56,9 +56,17 @@ namespace Safesign.Api.Controllers
         public async Task<IActionResult> CreateWithSignMacId(ConstructionSiteModel csModel) {
 
             var createdConstructionSite = await _cSService.CreateCSSiteWithSignMacId(csModel.CSSite, csModel.Signs);
-            return CreatedAtAction(nameof(Get), new { id = createdConstructionSite.Id }, createdConstructionSite);
-        }
+            
+            if(createdConstructionSite.csSite == null) {
+                var error = new {
+                    Message = "No sensor with that MacId exists in the system"
+                };
 
+                return BadRequest(error);
+            }
+
+            return CreatedAtAction(nameof(Get), new { id = createdConstructionSite.csSite.Id}, createdConstructionSite);
+        }
 
 
         [HttpPut("{id}")]

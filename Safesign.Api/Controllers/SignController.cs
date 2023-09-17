@@ -117,7 +117,6 @@ public class SignController : ControllerBase
         return Ok(response);
     }
 
-
     [HttpPut("{Id}/updatesensorid")]
     public async Task<IActionResult> UpdateSensorId(string signId, string newSensorId)
     {

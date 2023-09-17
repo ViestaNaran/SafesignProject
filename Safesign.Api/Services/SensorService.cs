@@ -1,7 +1,5 @@
-using System.Text.Json.Nodes;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Azure.Cosmos;
-using Microsoft.Azure.Cosmos.Linq;
 using Safesign.Core;
 using Safesign.Data;
 
@@ -22,6 +20,17 @@ public class SensorService
         _signContainer = db.GetContainer(connection.SignContainer);
         _signService = signService;
     }
+
+    public async Task<TestModel> Get(string macId) {
+       
+       var sensorData = _sensorContainer.GetItemLinqQueryable<TestModel>(true)
+        .Where(p => p.dmac == macId)
+        .AsEnumerable()
+        .FirstOrDefault();
+
+        return sensorData;
+    }
+
 
     public async Task<TestModel> CreateRandom2(SensorData sensorData)
     {
@@ -68,14 +77,6 @@ public class SensorService
 
             var signToUpdate = await _signService.GetSignBySensorMac(reading.dmac);
              
-            Console.WriteLine($"SensorReading: {reading}");
-            Console.WriteLine($"Sign: {signToUpdate}");
-
-            // var lookedUpModel = _sensorContainer.GetItemLinqQueryable<TestModel>(true)
-            //     .Where(p => p.dmac == reading.dmac)
-            //     .AsEnumerable()
-            //     .FirstOrDefault();
-
             //  Case: Sensor with this id exists, Update the sign associated with the sensor in the database.
             if (signToUpdate != null)
             {    

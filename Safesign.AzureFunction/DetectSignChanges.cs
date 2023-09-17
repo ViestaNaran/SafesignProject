@@ -3,6 +3,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Microsoft.Azure.Functions.Worker.Http;
 using System.Net;
+using System.IO.Compression;
 
 namespace Safesign.AzureFunction
 {
@@ -11,6 +12,7 @@ namespace Safesign.AzureFunction
         private readonly ILogger _logger;
         private readonly HttpClient _httpClient;
         private readonly int angleOffSet = 5;
+        private readonly int positionOffSet = 40;
     
 
         [Function("negotiate")]
@@ -73,41 +75,6 @@ namespace Safesign.AzureFunction
             return null;
         }
 
-        // [Function(nameof(DetectZChanges))]
-        // [SignalROutput(HubName = "serverless")]
-        // public SignalRMessageAction DetectZChanges(
-        //     [CosmosDBTrigger(
-        //     databaseName: "ToDoList",
-        //     collectionName: "SensorTest",
-        //     ConnectionStringSetting = "CosmosConnectionString", CreateLeaseCollectionIfNotExists = true,
-        //     LeaseCollectionName = "SensorLeases")] IReadOnlyList<xyzData> input
-        //     )
-        // {
-        //     _logger.LogInformation("DetectSensorchanges running!");
-
-        //     if(input != null && input.Count > 0) 
-        //     {
-        //         _logger.LogInformation($"Documents Modified: {input.Count}");
-                
-        //         foreach(var i in input) 
-        //         {
-        //             Console.WriteLine(i);
-        //             _logger.LogInformation($"i = {i}, {i.z}");
-        //             _logger.LogInformation($"Sensor Modified: {i.id}");
-                  
-        //             // Angle changed
-        //             if(i.z <= 0) 
-        //             {
-        //                 _logger.LogInformation($"Sensor {i.id} has z less than -200");
-        //                // await Task.Run(() => {
-        //                 return new SignalRMessageAction("SensorDataIssue", new object[] {i});
-        //                // });
-        //             }
-        //         }
-        //     }
-        //     return null;
-        // }
-
         [Function(nameof(DetectZChanges))]
         [SignalROutput(HubName = "serverless")]
         public SignalRMessageAction DetectZChanges(
@@ -130,18 +97,38 @@ namespace Safesign.AzureFunction
                     _logger.LogInformation($"i = {i}, {i.OgZ}");
                     _logger.LogInformation($"Sensor Modified: {i.SensorId}, on Sign: {i.Id}");
                   
-                    // Angle changed
-                    if(i.CurrZ <= 0) 
+                    // Z coordinate of sign has changed above / Below threshold. 
+                    // if(i.CurrZ <= 0) 
+                    // {
+                    //     _logger.LogInformation($"Sensor {i.SensorId} has z less than -200");
+                    //    // await Task.Run(() => {
+                    //     return new SignalRMessageAction("SensorDataIssue", new object[] {i});
+                    //    // });
+                    // }
+
+                    // X coordinate of sign has changed above / Below threshold. 
+                    if(i.CurrX >= i.OgX-positionOffSet && i.CurrX <= i.OgX+positionOffSet)
                     {
                         _logger.LogInformation($"Sensor {i.SensorId} has z less than -200");
-                       // await Task.Run(() => {
+                        return new SignalRMessageAction("SignPositionIssue", new object[] {i});
+                    }
+
+                    // Y coordinate of sign has changed above / Below threshold. 
+                    if(i.CurrY >= i.OgY-positionOffSet && i.CurrY <= i.OgY+positionOffSet)
+                    {
+                        _logger.LogInformation($"Sensor {i.SensorId}");
                         return new SignalRMessageAction("SensorDataIssue", new object[] {i});
-                       // });
+                    }
+
+                    // Z coordinate of sign has changed above / Below threshold. 
+                    if(i.CurrZ >= i.OgX-positionOffSet && i.CurrX <= i.OgX+positionOffSet)
+                    {
+                        _logger.LogInformation($"Sensor {i.SensorId} has z less than -200");
+                        return new SignalRMessageAction("SensorDataIssue", new object[] {i});
                     }
                 }
             }
             return null;
         }
-
     } // Class end
 } // Namespace end
