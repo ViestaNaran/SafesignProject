@@ -75,14 +75,14 @@ namespace Safesign.AzureFunction
             return null;
         }
 
-        [Function(nameof(DetectZChanges))]
+        [Function(nameof(DetectPositionChanges))]
         [SignalROutput(HubName = "serverless")]
-        public SignalRMessageAction DetectZChanges(
+        public SignalRMessageAction DetectPositionChanges(
             [CosmosDBTrigger(
-            databaseName: "ToDoList",
+            databaseName: "Safesign",
             collectionName: "SensorTest",
             ConnectionStringSetting = "CosmosConnectionString", CreateLeaseCollectionIfNotExists = true,
-            LeaseCollectionName = "SensorLeases")] IReadOnlyList<Sign> input
+            LeaseCollectionName = "SignLeases")] IReadOnlyList<Sign> input
             )
         {
             _logger.LogInformation("DetectSensorchanges running!");
