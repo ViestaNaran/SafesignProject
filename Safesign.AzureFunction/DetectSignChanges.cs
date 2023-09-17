@@ -80,7 +80,7 @@ namespace Safesign.AzureFunction
         public SignalRMessageAction DetectPositionChanges(
             [CosmosDBTrigger(
             databaseName: "Safesign",
-            collectionName: "SensorTest",
+            collectionName: "Signs",
             ConnectionStringSetting = "CosmosConnectionString", CreateLeaseCollectionIfNotExists = true,
             LeaseCollectionName = "SignLeases")] IReadOnlyList<Sign> input
             )
