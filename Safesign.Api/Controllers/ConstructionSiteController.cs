@@ -33,10 +33,8 @@ namespace Safesign.Api.Controllers
             {
             return NotFound();
             }
-        
             return Ok(constructionSite);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ConstructionSite constructionSite)
