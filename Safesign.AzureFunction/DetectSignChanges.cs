@@ -41,7 +41,6 @@ namespace Safesign.AzureFunction
             _httpClient = httpClientFactory.CreateClient("Api");
         }
 
-
         [Function(nameof(DetectAngleChange2))]
         [SignalROutput(HubName = "serverless")]
         public SignalRMessageAction DetectAngleChange2(
@@ -82,51 +81,42 @@ namespace Safesign.AzureFunction
             databaseName: "Safesign",
             collectionName: "Signs",
             ConnectionStringSetting = "CosmosConnectionString", CreateLeaseCollectionIfNotExists = true,
-            LeaseCollectionName = "SignLeases")] IReadOnlyList<Sign> input
+            LeaseCollectionName = "SignLeases1")] IReadOnlyList<Sign> input
             )
         {
-            _logger.LogInformation("DetectSensorchanges running!");
+            _logger.LogInformation("DetectPositionChanges running!");
 
             if(input != null && input.Count > 0) 
             {
-                _logger.LogInformation($"Documents Modified: {input.Count}");
+                _logger.LogInformation($"Sign positions Modified: {input.Count}");
                 
                 foreach(var i in input) 
                 {
-                    Console.WriteLine(i);
-                    _logger.LogInformation($"i = {i}, {i.OgZ}");
                     _logger.LogInformation($"Sensor Modified: {i.SensorId}, on Sign: {i.Id}");
                   
-                    // Z coordinate of sign has changed above / Below threshold. 
-                    // if(i.CurrZ <= 0) 
-                    // {
-                    //     _logger.LogInformation($"Sensor {i.SensorId} has z less than -200");
-                    //    // await Task.Run(() => {
-                    //     return new SignalRMessageAction("SensorDataIssue", new object[] {i});
-                    //    // });
-                    // }
+                    i.Issue = "";
 
-                    // X coordinate of sign has changed above / Below threshold. 
-                    if(i.CurrX >= i.OgX-positionOffSet && i.CurrX <= i.OgX+positionOffSet)
-                    {
-                        _logger.LogInformation($"Sensor {i.SensorId} has z less than -200");
-                        i.Issue += "X";
-                        return new SignalRMessageAction("SignPositionIssue", new object[] {i});
-                    }
+                    if(i != null) {
+                        // X coordinate of sign has changed above / Below threshold. 
+                        if(i.CurrX <= i.OgX-positionOffSet || i.CurrX >= i.OgX+positionOffSet)
+                        {
+                            _logger.LogInformation($"Sensor {i.SensorId} has problem with X position");
+                            i.Issue += "X";
+                        }
 
-                    // Y coordinate of sign has changed above / Below threshold. 
-                    if(i.CurrY >= i.OgY-positionOffSet && i.CurrY <= i.OgY+positionOffSet)
-                    {
-                        _logger.LogInformation($"Sensor {i.SensorId}");
-                        i.Issue += "Y";
-                        return new SignalRMessageAction("SignPositionIssue", new object[] {i});
-                    }
+                        // Y coordinate of sign has changed above / Below threshold. 
+                        if(i.CurrY <= i.OgY-positionOffSet || i.CurrY >= i.OgY+positionOffSet)
+                        {
+                            _logger.LogInformation($"Sensor {i.SensorId} has problem with Y position");
+                            i.Issue += "Y";
+                        }
 
-                    // Z coordinate of sign has changed above / Below threshold. 
-                    if(i.CurrZ >= i.OgZ-positionOffSet && i.CurrZ <= i.OgZ+positionOffSet)
-                    {
-                        _logger.LogInformation($"Sensor {i.SensorId} has z less than -200");
-                        i.Issue += "Z";
+                        // Z coordinate of sign has changed above / Below threshold. 
+                        if(i.CurrZ <= i.OgZ-positionOffSet || i.CurrZ >= i.OgZ+positionOffSet)
+                        {
+                            _logger.LogInformation($"Sensor {i.SensorId} has problem with Z position");
+                            i.Issue += "Z";
+                        }
                         return new SignalRMessageAction("SignPositionIssue", new object[] {i});
                     }
                 }

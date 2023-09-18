@@ -202,7 +202,7 @@ namespace Safesign.Services
                 OgX = initialSensorData.x0,
                 OgY = initialSensorData.y0,
                 OgZ = initialSensorData.z0,
-                Issue = "None"
+                Issue = "OK"
             };
 
             return await _signContainer.CreateItemAsync<Sign>(s);
