@@ -46,7 +46,7 @@ namespace Safesign.Api.Controllers
         [HttpPost("sensor")]
         public async Task<IActionResult> CreateWithSignMacId(ConstructionSiteModel csModel) {
 
-            var createdConstructionSite = await _cSService.CreateCsiteWithSignMacId(csModel.CSSite, csModel.Signs);
+            var createdConstructionSite = await _cSService.CreateCsiteWithSignMacId(csModel.CSite, csModel.Signs);
             
             if(createdConstructionSite.csSite == null) {
                 var error = new {

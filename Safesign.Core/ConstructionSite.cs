@@ -8,7 +8,7 @@ namespace Safesign.Core
         public string Id { get; set; }
         public string PlanId { get; set; }
         public string City { get; set; }
-        public string street { get; set;}
+        public string Street { get; set;}
         public string StartDate { get; set; }
         public string EndDate { get; set; }
         

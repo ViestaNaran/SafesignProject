@@ -10,7 +10,7 @@ namespace Safesign.Core
 {
     public class ConstructionSiteModel
     {
-        public  ConstructionSite CSSite {get; set; }
+        public  ConstructionSite CSite {get; set; }
         public List<Sign> Signs {get; set; }
     }
 }
