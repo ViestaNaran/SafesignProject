@@ -31,7 +31,6 @@ public class SensorService
         return sensorData;
     }
 
-
     public async Task<TestModel> CreateRandom2(SensorData sensorData)
     {
         Console.WriteLine("CreateRandom2 called");

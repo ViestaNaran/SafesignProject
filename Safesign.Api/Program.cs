@@ -1,11 +1,5 @@
-using Microsoft.AspNetCore;
 using Safesign.Data;
-using Safesign.Api.Controllers;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
 using Safesign.Services;
-using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 

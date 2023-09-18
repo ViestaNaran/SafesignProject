@@ -1,10 +1,6 @@
 ﻿using Microsoft.Azure.Cosmos;
 using Safesign.Core;
 using Safesign.Data;
-using System;
-using System.Security.Cryptography;
-using Safesign.Services;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Safesign.Services
 {
@@ -40,7 +36,7 @@ namespace Safesign.Services
             return csSite;
         }
 
-        public async Task<ConstructionSite> CreateCSsite(ConstructionSite csSite) {
+        public async Task<ConstructionSite> CreateCsite(ConstructionSite csSite) {
             return await _constructionSitesContainer.CreateItemAsync<ConstructionSite>(csSite);
         }
 
@@ -86,16 +82,16 @@ namespace Safesign.Services
            return await _constructionSitesContainer.ReplaceItemAsync<ConstructionSite>(csSite, id, new PartitionKey(id));
        }
 
-        public async Task<ConstructionSite> CreateCSSiteWithSigns(ConstructionSite csSite, List<Sign> signs)
+        public async Task<ConstructionSite> CreateCsiteWithSigns(ConstructionSite csSite, List<Sign> signs)
         {
             foreach(Sign s in signs) {
                 await _signService.Add(s);
             }
 
-            return await CreateCSsite(csSite);
+            return await CreateCsite(csSite);
         }
 
-        public async Task<(string signId, ConstructionSite csSite)> CreateCSSiteWithSignMacId(ConstructionSite csSite, List<Sign> signs)
+        public async Task<(string signId, ConstructionSite csSite)> CreateCsiteWithSignMacId(ConstructionSite csSite, List<Sign> signs)
         {
             foreach (Sign s in signs)
             {
@@ -108,7 +104,7 @@ namespace Safesign.Services
                 }
             }
 
-            return (null, await CreateCSsite(csSite));
+            return (null, await CreateCsite(csSite));
         }
     }
 }

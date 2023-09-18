@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Safesign.Api;
 
-
 [ApiController]
 [Route("[controller]")]
 public class PlanController : ControllerBase 
@@ -62,13 +61,6 @@ public class PlanController : ControllerBase
         await _planService.Update(id, plan);
         return CreatedAtAction(nameof(Get), new { id = plan.Id }, plan);
     }
-
-    // [HttpPut("{id}/sign")]
-    // public async Task<IActionResult> AddSign(string id, Plan plan)
-    // {
-    //     await _planService.AddSignToPlan(id);
-    //     return CreatedAtAction(nameof(Get), new {id = plan.Id}, plan);
-    // }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)

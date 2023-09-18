@@ -71,7 +71,6 @@ public class SignController : ControllerBase
         return Ok(await _signService.CreateSignWithSensor(id ,csId, planId, macId));
     }
 
-
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(string id, Sign sign)
     {
