@@ -76,7 +76,9 @@ public class SensorService
             TestModel reading = sensorData.obj[0];
 
             var signToUpdate = await _signService.GetSignBySensorMac(reading.dmac);
-             
+            
+            await _sensorContainer.ReplaceItemAsync<TestModel>(reading, reading.dmac, new PartitionKey(reading.dmac));
+
             //  Case: Sensor with this id exists, Update the sign associated with the sensor in the database.
             if (signToUpdate != null)
             {    
