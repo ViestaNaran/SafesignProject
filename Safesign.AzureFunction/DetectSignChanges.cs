@@ -13,6 +13,7 @@ namespace Safesign.AzureFunction
         private readonly HttpClient _httpClient;
         private readonly int angleOffSet = 5;
         private readonly int positionOffSet = 40;
+        private bool hasIssue {get; set;}
     
 
         [Function("negotiate")]
@@ -95,13 +96,16 @@ namespace Safesign.AzureFunction
                     _logger.LogInformation($"Sensor Modified: {i.SensorId}, on Sign: {i.Id}");
                   
                     i.Issue = "";
+                    hasIssue = false;
 
                     if(i != null) {
+
                         // X coordinate of sign has changed above / Below threshold. 
                         if(i.CurrX <= i.OgX-positionOffSet || i.CurrX >= i.OgX+positionOffSet)
                         {
                             _logger.LogInformation($"Sensor {i.SensorId} on sign: {i.Id}, on site: {i.CSId} has problem with X position");
                             i.Issue += "X";
+                            hasIssue = true;
                         }
 
                         // Y coordinate of sign has changed above / Below threshold. 
@@ -109,6 +113,7 @@ namespace Safesign.AzureFunction
                         {
                             _logger.LogInformation($"Sensor {i.SensorId} on sign: {i.Id}, on site: {i.CSId} has problem with Y position");
                             i.Issue += "Y";
+                            hasIssue = true;
                         }
 
                         // Z coordinate of sign has changed above / Below threshold. 
@@ -116,8 +121,12 @@ namespace Safesign.AzureFunction
                         {
                             _logger.LogInformation($"Sensor {i.SensorId} on sign: {i.Id}, on site: {i.CSId} has problem with Z position");
                             i.Issue += "Z";
+                            hasIssue = true;
                         }
-                        return new SignalRMessageAction("SignPositionIssue", new object[] {i});
+
+                        if(hasIssue) {
+                            return new SignalRMessageAction("SignPositionIssue", new object[] {i});
+                        }
                     }
                 }
             }
