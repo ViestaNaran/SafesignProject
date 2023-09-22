@@ -13,7 +13,7 @@ namespace Safesign.Core
         public float CurrAngle {get; set; }
         public string? Issue {get; set;}
         // Sensor reading values
-        [JsonProperty("dmac")]
+        
         public string SensorId {get; set;}
 
         [JsonProperty("type")]

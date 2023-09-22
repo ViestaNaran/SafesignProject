@@ -100,21 +100,21 @@ namespace Safesign.AzureFunction
                         // X coordinate of sign has changed above / Below threshold. 
                         if(i.CurrX <= i.OgX-positionOffSet || i.CurrX >= i.OgX+positionOffSet)
                         {
-                            _logger.LogInformation($"Sensor {i.SensorId} has problem with X position");
+                            _logger.LogInformation($"Sensor {i.SensorId} on sign: {i.Id}, on site: {i.CSId} has problem with X position");
                             i.Issue += "X";
                         }
 
                         // Y coordinate of sign has changed above / Below threshold. 
                         if(i.CurrY <= i.OgY-positionOffSet || i.CurrY >= i.OgY+positionOffSet)
                         {
-                            _logger.LogInformation($"Sensor {i.SensorId} has problem with Y position");
+                            _logger.LogInformation($"Sensor {i.SensorId} on sign: {i.Id}, on site: {i.CSId} has problem with Y position");
                             i.Issue += "Y";
                         }
 
                         // Z coordinate of sign has changed above / Below threshold. 
                         if(i.CurrZ <= i.OgZ-positionOffSet || i.CurrZ >= i.OgZ+positionOffSet)
                         {
-                            _logger.LogInformation($"Sensor {i.SensorId} has problem with Z position");
+                            _logger.LogInformation($"Sensor {i.SensorId} on sign: {i.Id}, on site: {i.CSId} has problem with Z position");
                             i.Issue += "Z";
                         }
                         return new SignalRMessageAction("SignPositionIssue", new object[] {i});
