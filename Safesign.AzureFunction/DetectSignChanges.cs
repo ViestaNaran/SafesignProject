@@ -3,7 +3,9 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Microsoft.Azure.Functions.Worker.Http;
 using System.Net;
-using System.IO.Compression;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace Safesign.AzureFunction
 {
@@ -77,7 +79,8 @@ namespace Safesign.AzureFunction
 
         [Function(nameof(DetectPositionChanges))]
         [SignalROutput(HubName = "serverless")]
-        public SignalRMessageAction DetectPositionChanges(
+        public async Task<SignalRMessageAction> DetectPositionChanges(
+            
             [CosmosDBTrigger(
             databaseName: "Safesign",
             collectionName: "Signs",
@@ -95,6 +98,8 @@ namespace Safesign.AzureFunction
                 {
                     _logger.LogInformation($"Sensor Modified: {i.SensorId}, on Sign: {i.Id}");
                   
+                    string signIssue = i.Issue;
+
                     i.Issue = "";
                     hasIssue = false;
 
@@ -125,6 +130,25 @@ namespace Safesign.AzureFunction
                         }
 
                         if(hasIssue) {
+                            if(i.Issue != signIssue) {
+                                    
+                                _httpClient.BaseAddress = new Uri("http://safesignapi.azurewebsites.net");
+                                string payload = JsonConvert.SerializeObject(i);
+                                
+                                var content = new StringContent(payload, Encoding.UTF8, "application/json");
+
+                                var response = await _httpClient.PutAsync($"sign/{i.Id}", content);
+
+                                if(response.IsSuccessStatusCode) {
+                                    _logger.LogInformation("AzureFunction: Updated sign succesfully");
+                                }
+                                else {
+                                    _logger.LogInformation("AzureFunction: Updating sign failed");
+                                }
+                        
+                            }
+
+                            hasIssue = false;
                             return new SignalRMessageAction("SignPositionIssue", new object[] {i});
                         }
                     }

@@ -68,7 +68,9 @@ public class SignController : ControllerBase
     [HttpPost("sensor")]
     public async Task<IActionResult> CreateSignWithSensor(string id, string csId, string planId, string macId)
     {
-        return Ok(await _signService.CreateSignWithSensor(id ,csId, planId, macId));
+        var sign = await _signService.CreateSignWithSensor(id ,csId, planId, macId);
+    
+        return CreatedAtAction(nameof(Get), new {id = sign.Id}, sign);
     }
 
 

@@ -65,7 +65,12 @@ namespace Safesign.Api.Controllers
                 return BadRequest(error);
             }
 
-            return CreatedAtAction(nameof(Get), new { id = createdConstructionSite.csSite.Id}, createdConstructionSite);
+            var responseObject = new {
+                ConstructionSite = createdConstructionSite.csSite,
+                Signs = createdConstructionSite.signs
+            };
+
+            return CreatedAtAction(nameof(Get), new { id = createdConstructionSite.csSite.Id}, responseObject);
         }
 
 
