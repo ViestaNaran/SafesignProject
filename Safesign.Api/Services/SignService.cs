@@ -199,6 +199,9 @@ namespace Safesign.Services
                 OgX = initialSensorData.x0,
                 OgY = initialSensorData.y0,
                 OgZ = initialSensorData.z0,
+                CurrX = initialSensorData.x0,
+                CurrY = initialSensorData.y0,
+                CurrZ = initialSensorData.z0,
                 Issue = "OK"
             };
 
