@@ -140,12 +140,11 @@ namespace Safesign.AzureFunction
                                 var response = await _httpClient.PutAsync($"sign/{i.Id}", content);
 
                                 if(response.IsSuccessStatusCode) {
-                                    _logger.LogInformation("AzureFunction: Updated sign succesfully");
+                                    _logger.LogInformation($"AzureFunction: Updated sign: {i.Id} succesfully");
                                 }
                                 else {
-                                    _logger.LogInformation("AzureFunction: Updating sign failed");
+                                    _logger.LogInformation($"AzureFunction: Updating sign: {i.Id} failed");
                                 }
-                        
                             }
 
                             hasIssue = false;
