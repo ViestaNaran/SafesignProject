@@ -1,14 +1,11 @@
-using System.IO.Compression;
-using System.Runtime.CompilerServices;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Azure.Cosmos;
 using Safesign.Core;
 using Safesign.Data;
 
 namespace Safesign.Services
 {
-   public class SignService
-   {
+    public class SignService
+    {
         private readonly Container _signContainer;
         private readonly Container _testModelContainer;
         private readonly int signAngleOffSet = 5;

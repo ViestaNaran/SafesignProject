@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Safesign.AzureFunction", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Safesign.Core", "Safesign.Core\Safesign.Core.csproj", "{83D8390D-82D0-49DE-B3D2-239A77304E1A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Safesign.Test", "Safesign.Test\Safesign.Test.csproj", "{03B26FB5-4408-43AE-A2A9-6D6F5E3E7645}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{83D8390D-82D0-49DE-B3D2-239A77304E1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83D8390D-82D0-49DE-B3D2-239A77304E1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83D8390D-82D0-49DE-B3D2-239A77304E1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03B26FB5-4408-43AE-A2A9-6D6F5E3E7645}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03B26FB5-4408-43AE-A2A9-6D6F5E3E7645}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03B26FB5-4408-43AE-A2A9-6D6F5E3E7645}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03B26FB5-4408-43AE-A2A9-6D6F5E3E7645}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

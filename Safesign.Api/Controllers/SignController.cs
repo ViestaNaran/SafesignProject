@@ -2,7 +2,7 @@ using Safesign.Core;
 using Safesign.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Safesign.Api;
+namespace Safesign.Api.Controllers;
 
 [ApiController]
 [Route("[Controller]")]
