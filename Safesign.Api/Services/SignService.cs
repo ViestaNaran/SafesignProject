@@ -1,4 +1,6 @@
+using System.Net;
 using Microsoft.Azure.Cosmos;
+using Microsoft.Extensions.Options;
 using Safesign.Core;
 using Safesign.Data;
 
@@ -81,13 +83,20 @@ namespace Safesign.Services
             return await _signContainer.CreateItemAsync<Sign>(sign);
         }
 
-        public async Task<Sign> Delete(string id)
+        public async Task<bool> Delete(string id)
         {
-            var sign = Get(id);
-            if (sign is null)
-                return null;
+            try {
+                var response = await _signContainer.DeleteItemAsync<Sign>(id, new PartitionKey(id));
+                if(response.StatusCode == HttpStatusCode.NoContent) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (Microsoft.Azure.Cosmos.CosmosException) {
+                    return false;
+            }
 
-            return await _signContainer.DeleteItemAsync<Sign>(id, new PartitionKey(id));
+            
         }
 
         public async Task<Sign> Update(string id, Sign sign)

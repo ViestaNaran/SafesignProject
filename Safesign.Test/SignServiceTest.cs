@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using Safesign.Core;
 using Safesign.Data;
 using Safesign.Services;
@@ -240,5 +241,147 @@ public class SignServiceTest
         // Cleanup
         await signService.Delete(signId);
     }
+
+    [Fact]
+     public async void Test_Delete_ShouldSuceed()
+    {
+        // Arrange
+        CosmosConnection connection = new CosmosConnection {
+            EndpointUri = "https://localhost:8081",
+            PrimaryKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
+            SafesignDB = "SafesignUnitTest",
+            TestDB = "UnitTestDB",
+            SignContainer = "SignUnitTest",
+            SensorContainer = "UnitTestSigns"
+        };
+        var signService = new SignService(connection);
+        
+        // Add a sign to be deleted
+        Random random = new Random();
+
+        string signId = random.NextInt64().ToString();
+
+        var signToAdd = new Sign
+        {
+            Id = signId,
+            CSId = "cs1",
+            PlanId = "plan1",
+            OgAngle = 20,
+            CurrAngle = 20,
+            Issue = "None",
+            SensorId = "sensor4",
+            Type = 1,
+            OgX = 10,
+            OgY = 10,
+            OgZ = 10,
+        };
+
+        var signToDelete = await signService.Add(signToAdd);
+
+        // Act
+        var response = await signService.Delete(signToDelete.Id);        
+        
+        // Assert
+        Assert.True(response);
+    }
+
+    [Fact]
+    public async void Test_Delete_ShouldFail()
+    {
+        // Arrange
+        CosmosConnection connection = new CosmosConnection {
+            EndpointUri = "https://localhost:8081",
+            PrimaryKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
+            SafesignDB = "SafesignUnitTest",
+            TestDB = "UnitTestDB",
+            SignContainer = "SignUnitTest",
+            SensorContainer = "UnitTestSigns"
+        };
+        var signService = new SignService(connection);
+        
+       string signNotPresentId = "1234";
+
+        // Act
+        var response = await signService.Delete(signNotPresentId);        
+        
+        // Assert
+        Assert.False(response);
+    }
+
+
+    [Fact]
+    public async Task Test_Update()
+    {
+        // Arrange
+        CosmosConnection connection = new CosmosConnection
+        {
+            EndpointUri = "https://localhost:8081",
+            PrimaryKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
+            SafesignDB = "SafesignUnitTest",
+            TestDB = "UnitTestDB",
+            SignContainer = "SignUnitTest",
+            SensorContainer = "UnitTestSigns"
+        };
+
+        var signService = new SignService(connection);
+        
+        Random random = new Random();
+
+        string signId = random.NextInt64().ToString();
+
+        var signToAdd = new Sign
+        {
+            Id = signId,
+            CSId = "cs1",
+            PlanId = "plan1",
+            OgAngle = 20,
+            CurrAngle = 20,
+            Issue = "None",
+            SensorId = "sensor4",
+            Type = 1,
+            OgX = 10,
+            OgY = 10,
+            OgZ = 10,
+        };
+
+        var addedSign = await signService.Add(signToAdd);
+
+        // A sign to replace the "signToAdd" object in the datbase.
+        // The value that is being updated is CurrAngle from 20 -> 40
+
+        Sign dummySign = new Sign
+        {
+            Id = signId,
+            CSId = "cs1",
+            PlanId = "plan1",
+            OgAngle = 20,
+            CurrAngle = 40,
+            Issue = "None",
+            SensorId = "sensor4",
+            Type = 1,
+            OgX = 10,
+            OgY = 10,
+            OgZ = 10,
+            // Set other properties as needed
+        };
+
+        // Assert that the added sign exists
+        Assert.NotNull(addedSign);
+        Assert.Equal(addedSign.Id, signToAdd.Id);
+
+        // Act
+        await signService.Update(addedSign.Id, dummySign);
+        var updatedSign = await signService.Get(dummySign.Id);
+        // Assert
+        // Assert.NotNull(updatedSign);
+
+        Assert.Equal(dummySign.Id, updatedSign.Id);
+        Assert.Equal(dummySign.CurrAngle, updatedSign.CurrAngle);
+        
+        await signService.Delete(updatedSign.Id);
+    }
+
+    
+
 
 }
