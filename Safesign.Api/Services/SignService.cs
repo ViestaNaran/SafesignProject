@@ -72,6 +72,44 @@ namespace Safesign.Services
             return signs;
         }
 
+        
+        public async Task<List<Sign>> GetSignsByPlanIdAsync(string planId)
+        {
+            List<Sign> signs = new List<Sign>();
+            var queryText = $"SELECT * FROM c where c.PlanId = '{planId}'";
+
+            var queryDefinition = new QueryDefinition(queryText);
+            var query = _signContainer.GetItemQueryIterator<Sign>(queryDefinition);
+            
+            while (query.HasMoreResults)
+            {
+                var response = await query.ReadNextAsync();
+                signs.AddRange(response);
+            }
+
+            return signs;
+            
+        }
+
+        public async Task<Sign> GetSignBySensorIdAsync(string sensorId)
+        {
+            // Create a query to find items with the specified SensorId
+            var queryText = $"SELECT * FROM c WHERE c.SensorId = '{sensorId}'";
+
+            // Execute the query asynchronously
+            var queryDefinition = new QueryDefinition(queryText);
+            var query = _signContainer.GetItemQueryIterator<Sign>(queryDefinition);
+
+            while (query.HasMoreResults)
+            {
+                var response = await query.ReadNextAsync();
+                return response.FirstOrDefault();
+            }
+
+            // If no matching item is found, return null
+            return null;
+        }
+
         public async Task<List<Sign>> GetSignsByCSId(string constructionSiteId)
         {
             var signs = _signContainer.GetItemLinqQueryable<Sign>(true)
@@ -82,6 +120,8 @@ namespace Safesign.Services
             return signs;
         }
 
+    
+
         public async Task<Sign> GetSignBySensorMac(string sensorDmac)
         {
             var sign = _signContainer.GetItemLinqQueryable<Sign>(true)
@@ -91,6 +131,9 @@ namespace Safesign.Services
 
             return sign;
         }
+
+
+        
 
         public async Task<Sign> Add(Sign sign)
         {
@@ -189,19 +232,16 @@ namespace Safesign.Services
 
         public async Task<Sign> UpdateSensorId(string signId, string newSensorId)
         {
-            // 1. Retrieve the existing Sign object by its ID from your data store.
             var existingSign = await Get(signId);
 
             if (existingSign == null)
             {
-                // Handle the case where the Sign with the specified ID doesn't exist.
+            
                 return null;
             }
 
-            // 2. Update the "SensorId" property with the new value.
             existingSign.SensorId = newSensorId;
 
-            // 3. Save the updated Sign object back to your data store.
             var updatedSign = await Update(existingSign.Id, existingSign);
 
             return updatedSign;

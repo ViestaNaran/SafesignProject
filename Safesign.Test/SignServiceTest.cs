@@ -22,7 +22,7 @@ public class SignServiceTest
         };
 
         SignService signService = new SignService(connection);
-        int expectedCount = 3;
+        int expectedCount = 4;
         // Act
         var signs = await signService.GetAll1();
 
@@ -81,6 +81,29 @@ public class SignServiceTest
     }
 
     [Fact]
+    public async void Test_GetBySensorIdAsync_Success() {
+        // Arrange
+        CosmosConnection connection = new CosmosConnection {
+            EndpointUri = "https://localhost:8081",
+            PrimaryKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
+            SafesignDB = "SafesignUnitTest",
+            TestDB = "UnitTestDB",
+            SignContainer = "SignUnitTest",
+            SensorContainer = "UnitTestSigns"
+        };
+
+        SignService signService = new SignService(connection);
+        string sensorId = "sensor1";
+        // Act
+        var sign = await signService.GetSignBySensorIdAsync(sensorId);
+
+        // Assert
+        Assert.NotNull(sign); 
+        Assert.Equal(sign.SensorId, sensorId); 
+
+    }
+
+    [Fact]
     public async void Test_GetBySignId_Fail() {
         // Arrange
         CosmosConnection connection = new CosmosConnection {
@@ -93,7 +116,7 @@ public class SignServiceTest
         };
 
         SignService signService = new SignService(connection);
-        string signId = "sign4";
+        string signId = "sign52334234";
         // Act
         var sign = await signService.Get(signId);
 
@@ -117,16 +140,42 @@ public class SignServiceTest
         var signService = new SignService(connection);
 
         string planIdToSearch = "plan3"; // Use an actual plan ID that exists in your test data.
-        
+        int expectedCount = 2;
 
         // Act
         var retrievedSigns = await signService.GetSignsByPlanId(planIdToSearch);
 
         // Assert
-        Assert.NotNull(retrievedSigns);
         Assert.NotEmpty(retrievedSigns);
-        Assert.Equal(retrievedSigns.FirstOrDefault().PlanId, planIdToSearch); // Expecting 2 signs with the specified plan ID.
+        Assert.Equal(expectedCount, retrievedSigns.Count()); // Expecting 2 signs with the specified plan ID.
     }
+
+    [Fact]
+    public async void Test_GetSignsByPlanIdAsync_WithCorrectPlanId()
+    {
+        // Arrange
+        CosmosConnection connection = new CosmosConnection {
+                EndpointUri = "https://localhost:8081",
+                PrimaryKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
+                SafesignDB = "SafesignUnitTest",
+                TestDB = "UnitTestDB",
+                SignContainer = "SignUnitTest",
+                SensorContainer = "UnitTestSigns"
+            };
+        
+        var signService = new SignService(connection);
+
+        string planIdToSearch = "plan3"; // Use an actual plan ID that exists in your test data.
+        int expectedCount = 2;
+
+        // Act
+        var retrievedSigns = await signService.GetSignsByPlanId(planIdToSearch);
+
+        // Assert
+        Assert.NotEmpty(retrievedSigns);
+        Assert.Equal(expectedCount, retrievedSigns.Count()); // Expecting 2 signs with the specified plan ID.
+    }
+
 
     [Fact]
     public async void Test_GetSignsByPlanId_WithIncorrectPlanId()
@@ -151,29 +200,29 @@ public class SignServiceTest
         Assert.Empty(retrievedSigns); // Expecting no signs for the incorrect plan ID.
     }
     
-    // [Fact]
-    // public async void Test_GetSignBySensorMac_WithCorrectMac()
-    // {
-    //     // Arrange
-    //     CosmosConnection connection = new CosmosConnection {
-    //             EndpointUri = "https://localhost:8081",
-    //             PrimaryKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
-    //             SafesignDB = "SafesignUnitTest",
-    //             TestDB = "UnitTestDB",
-    //             SignContainer = "SignUnitTest",
-    //             SensorContainer = "UnitTestSigns"
-    //         };
+    [Fact]
+    public async void Test_GetSignBySensorMac_WithCorrectMac()
+    {
+        // Arrange
+        CosmosConnection connection = new CosmosConnection {
+                EndpointUri = "https://localhost:8081",
+                PrimaryKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
+                SafesignDB = "SafesignUnitTest",
+                TestDB = "UnitTestDB",
+                SignContainer = "SignUnitTest",
+                SensorContainer = "UnitTestSigns"
+            };
         
-    //     var signService = new SignService(connection);
-    //     string sensorId = "sensor1";      
+        var signService = new SignService(connection);
+        string sensorId = "sensor1";      
 
-    //     // Act
-    //     var retrievedSign = await signService.GetSignBySensorMac(sensorId);
+        // Act
+        var retrievedSign = await signService.GetSignBySensorMac(sensorId);
 
-    //     // Assert
-    //     Assert.NotNull(retrievedSign);
-    //     Assert.Equal(retrievedSign.SensorId, sensorId); // Expecting 2 signs with the specified plan ID.
-    // }
+        // Assert
+        Assert.NotNull(retrievedSign);
+        Assert.Equal(retrievedSign.SensorId, sensorId); // Expecting 2 signs with the specified plan ID.
+    }
 
     [Fact]
     public async void Test_GetSignsBySensorMac_WithIncorrectMac()
