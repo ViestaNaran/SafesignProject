@@ -24,7 +24,7 @@ public class SignServiceTest
         SignService signService = new SignService(connection);
         int expectedCount = 3;
         // Act
-        var signs = await signService.GetAll();
+        var signs = await signService.GetAll1();
 
         // Assert
         Assert.NotNull(signs); // Check if the returned list is not null.
@@ -72,7 +72,7 @@ public class SignServiceTest
         SignService signService = new SignService(connection);
         string signId = "sign1";
         // Act
-        var sign = await signService.Get(signId);
+        var sign = await signService.Get1(signId);
 
         // Assert
         Assert.NotNull(sign); 
@@ -381,7 +381,147 @@ public class SignServiceTest
         await signService.Delete(updatedSign.Id);
     }
 
-    
+    [Fact]
+    public async Task Test_CheckSignAngle_SignAngledCorrectly() {
+        
+        // Arrange
+        CosmosConnection connection = new CosmosConnection
+        {
+            EndpointUri = "https://localhost:8081",
+            PrimaryKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
+            SafesignDB = "SafesignUnitTest",
+            TestDB = "UnitTestDB",
+            SignContainer = "SignUnitTest",
+            SensorContainer = "UnitTestSigns"
+        };
+
+        var signService = new SignService(connection);
+        
+        string signIdToCheck = "sign1";
+
+        // Act
+        var result = await signService.CheckSignAngle(signIdToCheck);
+
+        // Assert
+        Assert.True(result);
+
+    }
 
 
+    [Fact]
+    public async Task Test_CheckSignAngle_SignAngledINCORRECTLY() {
+        
+        // Arrange
+        CosmosConnection connection = new CosmosConnection
+        {
+            EndpointUri = "https://localhost:8081",
+            PrimaryKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
+            SafesignDB = "SafesignUnitTest",
+            TestDB = "UnitTestDB",
+            SignContainer = "SignUnitTest",
+            SensorContainer = "UnitTestSigns"
+        };
+
+        var signService = new SignService(connection);
+        
+        string signIdToCheck = "sign2";
+
+        // Act
+        var result = await signService.CheckSignAngle(signIdToCheck);
+
+        // Assert
+        Assert.False(result);
+
+    }
+
+    [Fact]
+    public async Task Test_CheckSignAngle_Sign_X_PlacedCorrectly() {
+        
+        // Arrange
+        CosmosConnection connection = new CosmosConnection
+        {
+            EndpointUri = "https://localhost:8081",
+            PrimaryKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
+            SafesignDB = "SafesignUnitTest",
+            TestDB = "UnitTestDB",
+            SignContainer = "SignUnitTest",
+            SensorContainer = "UnitTestSigns"
+        };
+
+        var signService = new SignService(connection);
+        
+        string signIdToCheck = "sign1";
+
+        // Act
+        var result = await signService.CheckSignPosition(signIdToCheck);
+
+        // Assert
+        Assert.True(result.Item1);
+        Assert.True(result.Item2);
+        Assert.True(result.Item3);
+
+    }
+
+
+    [Fact]
+    public async Task Test_CheckSignAngle_Sign_X_PlacedINCORRECTLY() {
+        
+        // Arrange
+        CosmosConnection connection = new CosmosConnection
+        {
+            EndpointUri = "https://localhost:8081",
+            PrimaryKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
+            SafesignDB = "SafesignUnitTest",
+            TestDB = "UnitTestDB",
+            SignContainer = "SignUnitTest",
+            SensorContainer = "UnitTestSigns"
+        };
+
+        var signService = new SignService(connection);
+        
+        string signIdToCheck = "sign3";
+
+        // Act
+        var result = await signService.CheckSignPosition(signIdToCheck);
+
+        // Assert
+         // Assert
+        Assert.False(result.Item1);
+        Assert.True(result.Item2);
+        Assert.True(result.Item3);
+    }
+
+    [Fact]
+    public async Task Test_CreateSignWithSensor() {
+        
+        // Arrange
+        CosmosConnection connection = new CosmosConnection
+        {
+            EndpointUri = "https://localhost:8081",
+            PrimaryKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
+            SafesignDB = "SafesignUnitTest",
+            TestDB = "SafesignUnitTest",
+            SignContainer = "SignUnitTest",
+            SensorContainer = "TestModelUnitTest"
+        };
+
+        var signService = new SignService(connection);
+        
+        Random random = new Random();
+
+        string signId = random.NextInt64().ToString();
+        string csId = "cs1";
+        string planId = "plan1";
+        string macId = "BC5729036D8C";
+
+        // Act
+        var addedSign = await signService.CreateSignWithSensor(signId,csId,planId,macId);
+
+        // Assert
+        Assert.NotNull(addedSign);
+        Assert.Equal(addedSign.Id, signId);
+        
+        // Cleanup
+        await signService.Delete(signId);
+    }
 }

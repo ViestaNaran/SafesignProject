@@ -1,5 +1,6 @@
 using System.Net;
 using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.Extensions.Options;
 using Safesign.Core;
 using Safesign.Data;
@@ -30,6 +31,20 @@ namespace Safesign.Services
 
             return signs;
         }
+        
+        
+        public async Task<List<Sign>> GetAll1()
+        {
+            var signsList = new List<Sign>();
+            var signs = await _signContainer.GetItemLinqQueryable<Sign>(true)
+            .Select(x => x).ToFeedIterator().ReadNextAsync();
+
+            foreach(Sign s in signs) {
+                signsList.Add(s);
+            }
+
+            return signsList;
+        }
 
         public async Task<Sign> Get(string id)
         {
@@ -38,6 +53,12 @@ namespace Safesign.Services
             .AsEnumerable()
             .FirstOrDefault();
 
+            return sign;
+        }
+
+          public async Task<Sign> Get1(string id)
+        {
+            var sign = await _signContainer.ReadItemAsync<Sign>(id, new PartitionKey(id));
             return sign;
         }
 
@@ -92,11 +113,9 @@ namespace Safesign.Services
                 } else {
                     return false;
                 }
-            } catch (Microsoft.Azure.Cosmos.CosmosException) {
+            } catch (CosmosException) {
                     return false;
             }
-
-            
         }
 
         public async Task<Sign> Update(string id, Sign sign)
@@ -193,21 +212,25 @@ namespace Safesign.Services
             // Random random = new Random();
             // string id = random.Next().ToString();
             
-            var initialSensorData =  _testModelContainer.GetItemLinqQueryable<TestModel>(true)
-                .Where(p => p.dmac == macId)
-                .AsEnumerable()
-                .FirstOrDefault();
+            // var initialSensorData =  _testModelContainer.GetItemLinqQueryable<TestModel>(true)
+            //     .Where(p => p.dmac == macId)
+            //     .AsEnumerable()
+            //     .FirstOrDefault();
 
-            if(initialSensorData == null) {
+            var response = await _testModelContainer.ReadItemAsync<TestModel>(macId, new PartitionKey(macId));
+           
+            TestModel initialSensorData1 = response.Resource;
+
+            if(initialSensorData1 == null) {
                 return null;
             }
 
             // OgAngle not set, because we use it as test value, and sensor does not provide an angle.
             Sign s = new Sign(id, csId, planId, macId)
             {
-                OgX = initialSensorData.x0,
-                OgY = initialSensorData.y0,
-                OgZ = initialSensorData.z0,
+                OgX = initialSensorData1.x0,
+                OgY = initialSensorData1.y0,
+                OgZ = initialSensorData1.z0,
                 Issue = "OK"
             };
 
