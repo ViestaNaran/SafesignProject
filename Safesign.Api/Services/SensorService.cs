@@ -50,7 +50,6 @@ public class SensorService
                 Console.WriteLine($"id: {tm.dmac}");
             }
 
-
             if (lookedUpModel.Count > 0)
             {
 
@@ -68,14 +67,14 @@ public class SensorService
     }
 
     public async Task<Sign> UpdateSensorData(SensorData sensorData)
-        {
-      
+    {
+    
         if (sensorData.msg == "advData" && sensorData.obj.Count > 0 && sensorData.obj[0].type == 1)
         {
             TestModel reading = sensorData.obj[0];
 
             var signToUpdate = await _signService.GetSignBySensorMac(reading.dmac);
-             
+            
             //  Case: Sensor with this id exists, Update the sign associated with the sensor in the database.
             if (signToUpdate != null)
             {    

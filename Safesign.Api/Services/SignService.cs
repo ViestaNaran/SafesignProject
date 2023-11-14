@@ -132,9 +132,6 @@ namespace Safesign.Services
             return sign;
         }
 
-
-        
-
         public async Task<Sign> Add(Sign sign)
         {
             return await _signContainer.CreateItemAsync<Sign>(sign);
